@@ -37,6 +37,8 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         IBLL.IT_ZhuaiJiaBakService T_ZhuaiJiaBakService { get; set; }
         IBLL.IScrherSAVEService ScrherSAVEService { get; set; }
         IBLL.IT_ScehMiShuService T_ScehMiShuService { get; set; }
+
+        IBLL.IGongGaoService GongGaoService { get; set; }
         short Delflag = (short)DelFlagEnum.Normarl;
 
         public ActionResult Index()
@@ -52,6 +54,17 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             ViewBag.LMasterID = LoginUser.MasterID;
             return View();
         }
+        #region 微信用获取点击次数和到期时间和客服电话
+        public ActionResult GetNumberInfo()
+        {
+            int OnClick = UserInfoService.GetMaxClick(LoginUser.ID);
+            var userInfos = UserInfoService.LoadEntities(x => x.ID == LoginUser.ID).FirstOrDefault();
+            DateTime OverTime = userInfos.OverTime;
+            var adminPhone = GongGaoService.LoadEntities(x => x.Items == 2).FirstOrDefault();
+            string phoneNum = adminPhone.text;
+            return Json(new { ret = "ok", OnClick = OnClick, AllClick= LoginUser.Click, OverTime = OverTime, phoneNum = phoneNum ,LoginName=LoginUser.UName}, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
         public ActionResult GetQuyu()
         {
             var City = UserInfo_CityService.LoadMyCity_Quyu(LoginUser.ID);
@@ -301,12 +314,25 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         public ActionResult SeePhoto()
         {
             long id = long.Parse(Request["strId"]);
+            #region 获取手机号
+            var phoneInfo = T_FGJHtmlDataService.LoadEntities(x => x.ID == id).FirstOrDefault();
+            bool phoneState = true;
+            string phoneNum = "";
+            if (phoneInfo != null)
+            {
+                phoneNum = phoneInfo.photo;
+            }
+            else
+            {
+                phoneState = false;
+            }
+            #endregion
             //检查用户点击中是否有该用户
             var Uclick = T_UserClickService.LoadEntities(x => x.UserInfoId == LoginUser.ID).FirstOrDefault();
             //检查是否点击过查看电话
             var SeeClick = T_SeeClickPhotoService.LoadEntities(x => x.UserID == LoginUser.ID && x.T_FgjID == id).FirstOrDefault();
 
-            if (UserInfoService.GetMaxClick(LoginUser.ID)>=LoginUser.Click)
+            if (UserInfoService.GetMaxClick(LoginUser.ID) >= LoginUser.Click)
             {
                 return Content(Common.SerializerHelper.SerializeToString(new { msg = "此用户账户查看量已上限！" }));
             }
@@ -362,7 +388,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                         string str = SeeClickPhoto(Uclick, id);
                         if (str != "OK")
                         {
-                            return Content(Common.SerializerHelper.SerializeToString(new { msg = str }));
+                            return Content(Common.SerializerHelper.SerializeToString(new { msg = str, phoneState = phoneState, phoneNum = phoneNum }));
                         }
 
                     }
@@ -372,10 +398,10 @@ namespace CZBK.ItcastOA.WebApp.Controllers
 
             // return Content("ok," + (Uclick == null ? 1.ToString() : Uclick.ThisClick.ToString()));1
             //int retUclick = Uclick == null ? 1 :Convert.ToInt32( Uclick.ThisClick);
-            return Content(Common.SerializerHelper.SerializeToString(new { Uclick = UserInfoService.GetMaxClick(LoginUser.ID), msg = "ok" , MtrId = LoginUser.MasterID }));
+            return Content(Common.SerializerHelper.SerializeToString(new { Uclick = UserInfoService.GetMaxClick(LoginUser.ID), msg = "ok", MtrId = LoginUser.MasterID, phoneState = phoneState, phoneNum = phoneNum }));
 
         }
-        private string GetSelectSmallSave(int? masterID ,long id)
+        private string GetSelectSmallSave(int? masterID, long id)
         {
             var UMaster = UserInfoService.LoadEntities(x => x.MasterID == masterID).DefaultIfEmpty();
             var temp = from a in UMaster
@@ -387,10 +413,10 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                            Name = v.UserInfo.UName
                        };
             var tt = temp.ToArray();
-            string str = temp.Count()>0? tt[0].Name:"on";
+            string str = temp.Count() > 0 ? tt[0].Name : "on";
             return str;
         }
-       
+
         private string SeeClickPhoto(T_UserClick Uclick, long id)
         {
             if (Uclick == null)
@@ -404,7 +430,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             }
             else
             {
-                
+
                 DateTime logintime = Convert.ToDateTime(Uclick.LoginClickTime);
                 if (logintime.ToString("yyyy-MM-dd") == MvcApplication.GetT_time().ToString("yyyy-MM-dd"))
                 {

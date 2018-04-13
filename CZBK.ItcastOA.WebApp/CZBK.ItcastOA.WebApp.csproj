@@ -228,6 +228,9 @@
     <Content Include="Config\service.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\HtmlImage\banner1.jpg" />
+    <Content Include="Content\HtmlImage\banner2.jpg" />
+    <Content Include="Content\HtmlImage\banner3.jpg" />
     <Content Include="Content\Images\3DSMAX.png" />
     <Content Include="Content\Images\7_7.jpg" />
     <Content Include="Content\Images\Alien Folder.png" />

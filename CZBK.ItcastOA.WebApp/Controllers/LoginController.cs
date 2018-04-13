@@ -59,7 +59,10 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             //2:判断用户输入的用户名与密码
             string userName = Request["LoginCode"];
             string userPwd = Request["LoginPwd"];
-            userPwd = Model.Enum.AddMD5.GaddMD5(userPwd);
+            if (Request["MoNiLogin"] == null)
+            {
+                userPwd = Model.Enum.AddMD5.GaddMD5(userPwd);
+            }
            UserInfo userInfo=UserInfoService.LoadEntities(u => u.UName == userName && u.UPwd == userPwd).FirstOrDefault();
            if (userInfo != null)
            {
@@ -191,5 +194,28 @@ namespace CZBK.ItcastOA.WebApp.Controllers
 
         }
         #endregion
+        #region 微信获取用户名密码
+        public ActionResult getUsernameAndPwd()
+        {
+            string wxid = Request["wxid"];
+            var temp = WxUserService.LoadEntities(x => x.Wx_id == wxid).FirstOrDefault();
+            if (temp != null)
+            {
+                WXXInfo wxx = new WXXInfo();
+                wxx.Username = temp.UserInfo.UName;
+                wxx.Password = temp.UserInfo.UPwd;
+                return Json(new { ret = "ok", rows = wxx }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        #endregion
+    }
+    public class WXXInfo
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

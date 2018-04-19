@@ -138,8 +138,11 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                                FwZhuangxiu = a.FwZhuangxiu,
                                FwChaoxiang = a.FwChaoxiang,
                                FwNianxian = a.FwNianxian,
-                               FwMianji = a.FwMianji
+                               FwMianji = a.FwMianji,
+                               Fmimage = a.Image_str
                            };
+                
+                
                 return Json(new { rows = temp, total = Uxms.TotalCount }, JsonRequestBehavior.AllowGet);
                 #endregion
 
@@ -186,7 +189,6 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                     #endregion
                 }
                 var temp = GetJson(userInfoParam);
-
                 return Json(new { rows = temp, total = userInfoParam.TotalCount }, JsonRequestBehavior.AllowGet);
             }
            
@@ -271,7 +273,8 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                            FwZhuangxiu = a.FwZhuangxiu,
                            FwChaoxiang = a.FwChaoxiang,
                            FwNianxian = a.FwNianxian,
-                           FwMianji = a.FwMianji
+                           FwMianji = a.FwMianji,
+                           Fmimage = a.Image_str
                        };
             return temp;
         }

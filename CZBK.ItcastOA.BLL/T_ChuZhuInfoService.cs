@@ -14,7 +14,12 @@ namespace CZBK.ItcastOA.BLL
     {
         public IQueryable<T_ChuZhuInfo> LoadSearchEntities(UserInfoParam uip)
         {
+            
             var temp = this.GetCurrentDbSession.T_ChuZhuInfoDal.LoadEntities(x => x.CityID == uip.CityID);
+            if (uip.quyu != "no")
+            {
+                temp = temp.Where<T_ChuZhuInfo>(x => x.LaiYuan != "58");
+            }
             if (!string.IsNullOrEmpty(uip.Str))
             {
                 temp = temp.Where<T_ChuZhuInfo>(u => u.Addess.Contains(uip.Str)|| u.ChuZhuName.Contains(uip.Str) || u.Bak.Contains(uip.Str));

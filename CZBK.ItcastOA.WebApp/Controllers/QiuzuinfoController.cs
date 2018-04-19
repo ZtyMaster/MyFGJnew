@@ -70,7 +70,8 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             uip.CityID = LoginUser.CityID;
             uip.Str = Request["Str"] != null ? Request["Str"] : null;
             uip.Isee = Request["Isee"] != null ? Convert.ToBoolean(Request["Isee"]) : false;
-            uip.C_id = LoginUser.ID;    
+            uip.C_id = LoginUser.ID;
+            uip.quyu = Request["IsAPPsche"] != null ? Request["IsAPPsche"].ToString() : "no";
             var temp = T_ChuZhuInfoService.LoadSearchEntities(uip);
             var Rtemo = from a in temp
                         select new
@@ -88,7 +89,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                             ClickCount = a.SeeQzCzs.Count(),
                             Laiyuan= a.LaiYuan,
                             IsQZ ="CZ",
-                            url=a.ChuZhuHref
+                            url=a.ChuZhuHref,
                         };
 
             return Json(new {rows= Rtemo, total=uip.TotalCount },JsonRequestBehavior.AllowGet);

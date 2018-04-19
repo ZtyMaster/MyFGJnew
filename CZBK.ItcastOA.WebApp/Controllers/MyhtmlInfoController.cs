@@ -86,7 +86,8 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                            FwBiaoJiID = b.ID,
                            FwColors = b.T_BiaoJiInfo.Colors,
                            Fwpingmi=a.Pingmi_int,
-                           FwPingmiMoney=a.Money_int
+                           FwPingmiMoney=a.Money_int,
+                           Fmimage=a.Image_str
                        };
 
             return Json(new { rows = temp, total = userInfoParam.TotalCount }, JsonRequestBehavior.AllowGet);

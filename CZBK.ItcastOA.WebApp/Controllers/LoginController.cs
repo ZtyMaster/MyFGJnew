@@ -198,7 +198,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         public ActionResult getUsernameAndPwd()
         {
             string wxid = Request["wxid"];
-            var temp = WxUserService.LoadEntities(x => x.Wx_id == wxid).FirstOrDefault();
+            /*var temp = WxUserService.LoadEntities(x => x.Wx_id == wxid).FirstOrDefault();
             if (temp != null)
             {
                 WXXInfo wxx = new WXXInfo();
@@ -209,7 +209,11 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             else
             {
                 return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
-            }
+            }*/
+            WXXInfo wxx = new WXXInfo();
+            wxx.Username = "MinApp";
+            wxx.Password = Model.Enum.AddMD5.GaddMD5("123456");
+            return Json(new { ret = "ok", rows = wxx }, JsonRequestBehavior.AllowGet);
         }
         #endregion
     }

@@ -206,6 +206,7 @@
     <Compile Include="Controllers\UserInfoController.cs" />
     <Compile Include="Controllers\UserSaveInfoController.cs" />
     <Compile Include="Controllers\WFTempController.cs" />
+    <Compile Include="Controllers\WXXHrefInfoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

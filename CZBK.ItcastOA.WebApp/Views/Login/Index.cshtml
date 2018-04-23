@@ -54,8 +54,11 @@
             });
         })
 
-
-      
+        function toTest() {
+            $.post("/WXXHrefInfo/GetHrefForCS", { "rows": 15, "page": 1, "cityStr": "Dalian" }, function (data) {
+                alert(data)
+            })
+        }
 
     </script>
     <style type="text/css">
@@ -271,6 +274,8 @@
             @ViewData["banquan"]
         </div>
     </div>
+
+    <input hidden="hidden" type="button" onclick="toTest()" value="测试"/>
 
     <div id="floatTools" class="rides-cs" style="height:246px;">
         <div class="floatL">

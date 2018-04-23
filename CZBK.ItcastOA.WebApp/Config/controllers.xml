@@ -140,6 +140,25 @@
     <property name="T_FGJHtmlDataService" ref="T_FGJHtmlDataService" />
     <property name="GongGaoService" ref="GongGaoService" />
   </object>
+
+  <object type="CZBK.ItcastOA.WebApp.Controllers.WXXHrefInfoController, CZBK.ItcastOA.WebApp" singleton="false" >
+    <property name="T_FGJHtmlDataService" ref="T_FGJHtmlDataService" />
+    <property name="UserInfo_CityService" ref="UserInfo_CityService" />
+    <property name="T_SaveHtmlDataService" ref="T_SaveHtmlDataService" />
+    <property name="T_ItemsService" ref="T_ItemsService" />
+    <property name="T_CityService" ref="T_CityService" />
+    <property name="ActionInfoService" ref="ActionInfoService" />
+    <property name="T_SeeClickPhotoService" ref="T_SeeClickPhotoService" />
+    <property name="T_UserClickService" ref="T_UserClickService" />
+    <property name="UserInfoService" ref="UserInfoService" />
+    <property name="T_BoolItemService" ref="T_BoolItemService" />
+    <property name="T_ZhuaiJiaBakService" ref="T_ZhuaiJiaBakService" />
+    <property name="ScrherSAVEService" ref="ScrherSAVEService" />
+    <property name="T_ScehMiShuService" ref="T_ScehMiShuService" />
+    <property name="GongGaoService" ref="GongGaoService" />
+    <property name="T_QiuZhuQiuGouService" ref="T_QiuZhuQiuGouService" />
+    <property name="T_ChuZhuInfoService" ref="T_ChuZhuInfoService" />
+  </object>
   <!--intentionally do NOT register the AccountController or the ValuesController with the container; demonstrates that the underlying
   default controller factory will properly (attempt to!) resolve all controllers not registered with Spring.NET
   using its default controller resolution behavoir-->

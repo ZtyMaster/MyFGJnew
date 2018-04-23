@@ -200,7 +200,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         public ActionResult getUsernameAndPwd()
         {
             string wxid = Request["wxid"];
-            var temp = WxUserService.LoadEntities(x => x.Wx_id != null).FirstOrDefault();
+            var temp = WxUserService.LoadEntities(x => x.Wx_id == wxid).FirstOrDefault();
             if (temp != null)
             {
                 WXXInfo wxx = new WXXInfo();

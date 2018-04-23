@@ -192,6 +192,47 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                        };
             return temp;
         }
+
+        public ActionResult GundongGG()
+        {
+            var GongG = GongGaoService.LoadEntities(x => x.Items == 8).DefaultIfEmpty();
+            var temp = from a in GongG
+                       select new
+                       {
+                           a.text,
+                           a.Addtime,
+                           a.ID
+                       };
+            temp = temp.OrderByDescending(x => x.Addtime);
+            return Json(new { ret = temp }, JsonRequestBehavior.AllowGet);
+
+        }
+        #region 查看图片
+        public ActionResult SeeImage()
+        {
+            int id = int.Parse(Request["id"]);
+            var temp = T_FGJHtmlDataService.LoadEntities(x => x.ID == id).FirstOrDefault();
+            string imageSTR = temp.Image_str;
+            string Masimage = imageSTR.Replace("有---", string.Empty);
+            Masimage = Masimage.Replace("w=242&h=150&", "w=700&h=480&");
+            if (temp != null)
+            {
+                return Content(Common.SerializerHelper.SerializeToString(new { serverData = Masimage, msg = "ok" }));
+            }
+            else
+            {
+                return Content(Common.SerializerHelper.SerializeToString(new { msg = "no" }));
+            }
+        }
+        #endregion
+        #region 查客服电话
+        public ActionResult GetKFphone()
+        {
+            var adminPhone = GongGaoService.LoadEntities(x => x.Items == 2).FirstOrDefault();
+            string phoneNum = adminPhone.text;
+            return Json(new { ret = "ok", phoneNum = phoneNum }, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
     }
 
 }

@@ -29,6 +29,8 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         IBLL.IGongGaoService GongGaoService { get; set; }
         IBLL.IT_QiuZhuQiuGouService T_QiuZhuQiuGouService { get; set; }
         IBLL.IT_ChuZhuInfoService T_ChuZhuInfoService { get; set; }
+        IBLL.IT_QuyuService T_QuyuService { get; set; }
+
 
         public ActionResult Index()
         {
@@ -226,13 +228,94 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         }
         #endregion
         #region 查客服电话
-        public ActionResult GetKFphone()
+        public ActionResult GetKFInfo()
         {
+            KFinfo kfinfo = new KFinfo();
             var adminPhone = GongGaoService.LoadEntities(x => x.Items == 2).FirstOrDefault();
-            string phoneNum = adminPhone.text;
-            return Json(new { ret = "ok", phoneNum = phoneNum }, JsonRequestBehavior.AllowGet);
+            kfinfo.kfPersonTel = adminPhone.text;
+            var kfPersonQQ = GongGaoService.LoadEntities(x => x.Items == 4).FirstOrDefault();
+            kfinfo.kfPersonQQ = kfPersonQQ.text;
+            var temp = GongGaoService.LoadEntities(x => x.Items == 3).DefaultIfEmpty().ToList();
+            foreach(var a in temp)
+            {
+                switch (a.bak)
+                {
+                    case "客服姓名":
+                        kfinfo.kfPersonName = a.text;
+                        break;
+                    case "客服微信号":
+                        kfinfo.kfPersonVx = a.text;
+                        break;
+                    case "客服联系地址":
+                        kfinfo.kfPersonAddress = a.text;
+                        break;
+                    case "客服备注":
+                        kfinfo.kfPersonBZ = a.text;
+                        break;
+                }
+            }
+            return Json(new { ret = "ok", kfInfo = kfinfo }, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+        #region 获取选项卡条件数据
+        public ActionResult GetTabInfo()
+        {
+            var temp = GongGaoService.LoadEntities(x => x.Items == 9).DefaultIfEmpty().ToList();
+            List<TabInfo> tiMoney = new List<TabInfo>();
+            List<TabInfo> tiHuxing = new List<TabInfo>();
+            var idForMoney = 1; 
+            var idForHuxing = 1; 
+            foreach (var a in temp)
+            {
+                switch (a.bak)
+                {
+                    case "房屋总价":
+                        TabInfo money = new TabInfo();
+                        money.name = a.text;
+                        money.id = idForMoney;
+                        tiMoney.Add(money);
+                        idForMoney += 1;
+                        break;
+                    case "房屋户型":
+                        TabInfo huxing = new TabInfo();
+                        huxing.name = a.text;
+                        huxing.id = idForHuxing;
+                        tiHuxing.Add(huxing);
+                        idForHuxing += 1;
+                        break;
+                }
+            }
+            var cityStr = Request["cityStr"] ;
+            var rtmp = T_QuyuService.LoadEntities(x => x.T_City.City_str == cityStr).DefaultIfEmpty().ToList();
+            if(rtmp != null & rtmp[0] != null)
+            {
+                var tiArea = from a in rtmp
+                           select new
+                           {
+                               id = a.ID,
+                               name = a.QY_connet
+                           };
+                return Json(new { ret = "okAll", tiMoney = tiMoney, tiHuxing = tiHuxing,tiArea= tiArea }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { ret = "ok", tiMoney = tiMoney, tiHuxing = tiHuxing }, JsonRequestBehavior.AllowGet);
+            }
         }
         #endregion
     }
-
+    public class KFinfo
+    {
+        public string kfPersonName { get; set; }
+        public string kfPersonTel { get; set; }
+        public string kfPersonQQ { get; set; }
+        public string kfPersonVx { get; set; }
+        public string kfPersonAddress { get; set; }
+        public string kfPersonBZ { get; set; }
+    }
+    public class TabInfo
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+    }
 }

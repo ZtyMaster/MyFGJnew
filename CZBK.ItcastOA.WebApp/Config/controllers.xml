@@ -158,6 +158,7 @@
     <property name="GongGaoService" ref="GongGaoService" />
     <property name="T_QiuZhuQiuGouService" ref="T_QiuZhuQiuGouService" />
     <property name="T_ChuZhuInfoService" ref="T_ChuZhuInfoService" />
+    <property name="T_QuyuService" ref="T_QuyuService" />
   </object>
   <!--intentionally do NOT register the AccountController or the ValuesController with the container; demonstrates that the underlying
   default controller factory will properly (attempt to!) resolve all controllers not registered with Spring.NET

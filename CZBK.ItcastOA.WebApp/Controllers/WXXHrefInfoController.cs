@@ -260,28 +260,34 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         #region 获取选项卡条件数据
         public ActionResult GetTabInfo()
         {
-            var temp = GongGaoService.LoadEntities(x => x.Items == 9).DefaultIfEmpty().ToList();
+            var temp = T_ItemsService.LoadEntities(x => (x.Icons == 0 || x.Icons == 1 || x.Icons == 2) && x.Str_val != "0").DefaultIfEmpty().ToList();
             List<TabInfo> tiMoney = new List<TabInfo>();
+            List<TabInfo> tiMianji = new List<TabInfo>(); 
             List<TabInfo> tiHuxing = new List<TabInfo>();
-            var idForMoney = 1; 
-            var idForHuxing = 1; 
             foreach (var a in temp)
             {
-                switch (a.bak)
+                switch (a.Icons)
                 {
-                    case "房屋总价":
+                    case 0:
                         TabInfo money = new TabInfo();
-                        money.name = a.text;
-                        money.id = idForMoney;
+                        money.name = a.Str;
+                        money.id = a.ID;
+                        money.nameStr = a.Str_val;
                         tiMoney.Add(money);
-                        idForMoney += 1;
                         break;
-                    case "房屋户型":
+                    case 1:
+                        TabInfo mianji = new TabInfo();
+                        mianji.name = a.Str;
+                        mianji.id = a.ID;
+                        mianji.nameStr = a.Str_val;
+                        tiMianji.Add(mianji);
+                        break;
+                    case 2:
                         TabInfo huxing = new TabInfo();
-                        huxing.name = a.text;
-                        huxing.id = idForHuxing;
+                        huxing.name = a.Str;
+                        huxing.id = a.ID;
+                        huxing.nameStr = a.Str_val;
                         tiHuxing.Add(huxing);
-                        idForHuxing += 1;
                         break;
                 }
             }
@@ -295,14 +301,48 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                                id = a.ID,
                                name = a.QY_connet
                            };
-                return Json(new { ret = "okAll", tiMoney = tiMoney, tiHuxing = tiHuxing,tiArea= tiArea }, JsonRequestBehavior.AllowGet);
+                return Json(new { ret = "okAll", tiMoney = tiMoney, tiMianji = tiMianji, tiArea= tiArea,tiHuxing= tiHuxing }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return Json(new { ret = "ok", tiMoney = tiMoney, tiHuxing = tiHuxing }, JsonRequestBehavior.AllowGet);
+                return Json(new { ret = "ok", tiMoney = tiMoney, tiMianji = tiMianji , tiHuxing = tiHuxing }, JsonRequestBehavior.AllowGet);
             }
         }
         #endregion
+        public ActionResult GetAllCityList()
+        {
+            var temp = T_CityService.LoadEntities(x => x.DelFlag == 0).DefaultIfEmpty().ToList();
+            if(temp != null && temp[0] != null)
+            {
+                List<TabInfo> tiList = new List<TabInfo>();
+                foreach(var a in temp)
+                {
+                    TabInfo ti = new TabInfo();
+                    ti.id = a.ID;
+                    ti.name = a.City;
+                    tiList.Add(ti);
+                }
+                return Json(new { ret = "ok", rows=tiList }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { ret = "no", msg="数据表中无数据！" }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetAllZhuangXiuList()
+        {
+            var temp = T_ItemsService.LoadEntities(x => x.Icons == 3 && x.Str_val != "0").DefaultIfEmpty().ToList();
+            if (temp != null && temp[0] != null)
+            {
+                List<TabInfo> tiList = new List<TabInfo>();
+                foreach (var a in temp)
+                {
+                    TabInfo ti = new TabInfo();
+                    ti.id = a.ID;
+                    ti.name = a.Str;
+                    tiList.Add(ti);
+                }
+                return Json(new { ret = "ok", rows = tiList }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { ret = "no", msg = "数据表中无数据！" }, JsonRequestBehavior.AllowGet);
+        }
     }
     public class KFinfo
     {
@@ -315,7 +355,8 @@ namespace CZBK.ItcastOA.WebApp.Controllers
     }
     public class TabInfo
     {
-        public int id { get; set; }
+        public int? id { get; set; }
         public string name { get; set; }
+        public string nameStr { get; set; }
     }
 }

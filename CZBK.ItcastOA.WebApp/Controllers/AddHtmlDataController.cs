@@ -62,7 +62,39 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             }
             else
             {
-                return Json(new { temp=DelT }, JsonRequestBehavior.AllowGet);
+                if(Request["wxState"] != null)
+                {
+                    editAllInfo eai = new editAllInfo();
+                    eai.ID = DelT.ID;
+                    eai.HLName = DelT.HLName;
+                    eai.HLhref = DelT.HLhref;
+                    eai.PersonName = DelT.PersonName;
+                    eai.Address = DelT.Address;
+                    eai.photo = DelT.photo;
+                    eai.FbTime = DelT.FbTime;
+                    eai.FwSumMoney = DelT.FwSumMoney;
+                    eai.FwHuXing = DelT.FwHuXing;
+                    eai.FwMianji = DelT.FwMianji;
+                    eai.FwLoucheng = DelT.FwLoucheng;
+                    eai.FwZhuangxiu = DelT.FwZhuangxiu;
+                    eai.FwNianxian = DelT.FwNianxian;
+                    eai.FwChaoxiang = DelT.FwChaoxiang;
+                    eai.bak = DelT.bak;
+                    eai.Id_count = DelT.Id_count;
+                    eai.Laiyuan = DelT.Laiyuan;
+                    eai.Image_str = DelT.Image_str;
+                    eai.CityID = DelT.CityID;
+                    eai.delflag = DelT.delflag;
+                    eai.SumMoneyID = DelT.SumMoneyID;
+                    eai.MianjiID = DelT.MianjiID;
+                    eai.HuXingID = DelT.HuXingID;
+                    eai.Money_int = DelT.Money_int;
+                    eai.Pingmi_int = DelT.Pingmi_int;
+                    eai.AddItemsUserID = DelT.AddItemsUserID;
+                    eai.AddUserTiem = DelT.AddUserTiem;
+                    return Json(new { ret = "ok", temp = eai }, JsonRequestBehavior.AllowGet);
+                }
+                return Json(new { ret = "ok",temp=DelT }, JsonRequestBehavior.AllowGet);
             }
             
         }
@@ -165,7 +197,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             }
             else
             {
-                return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+                return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
             }           
         }
         //删除添加的数据
@@ -245,5 +277,34 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         }
         #endregion
      
+    }
+    public class editAllInfo {
+        public long ID { get; set; }
+        public string HLName { get; set; }
+        public string HLhref { get; set; }
+        public string PersonName { get; set; }
+        public string Address { get; set; }
+        public string photo { get; set; }
+        public System.DateTime FbTime { get; set; }
+        public string FwSumMoney { get; set; }
+        public string FwHuXing { get; set; }
+        public string FwMianji { get; set; }
+        public string FwLoucheng { get; set; }
+        public string FwZhuangxiu { get; set; }
+        public string FwNianxian { get; set; }
+        public string FwChaoxiang { get; set; }
+        public string bak { get; set; }
+        public Nullable<int> Id_count { get; set; }
+        public string Laiyuan { get; set; }
+        public string Image_str { get; set; }
+        public Nullable<int> CityID { get; set; }
+        public Nullable<short> delflag { get; set; }
+        public Nullable<int> SumMoneyID { get; set; }
+        public Nullable<int> MianjiID { get; set; }
+        public Nullable<int> HuXingID { get; set; }
+        public Nullable<decimal> Money_int { get; set; }
+        public Nullable<decimal> Pingmi_int { get; set; }
+        public Nullable<int> AddItemsUserID { get; set; }
+        public Nullable<System.DateTime> AddUserTiem { get; set; }
     }
 }

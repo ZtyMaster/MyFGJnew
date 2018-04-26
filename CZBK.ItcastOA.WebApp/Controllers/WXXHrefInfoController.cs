@@ -343,6 +343,16 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             }
             return Json(new { ret = "no", msg = "数据表中无数据！" }, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult GetKfPhoneNum()
+        {
+            var adminPhone = GongGaoService.LoadEntities(x => x.Items == 2).FirstOrDefault();
+            if(adminPhone != null)
+            {
+                string phoneNum = adminPhone.text;
+                return Json(new { ret = "ok", phoneNum = phoneNum }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
+        }
     }
     public class KFinfo
     {

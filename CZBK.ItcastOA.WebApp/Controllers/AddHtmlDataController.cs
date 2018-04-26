@@ -208,14 +208,14 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             {
                 if (T_ChuZhuInfoService.DeleteEntity(tdata))
                 {
-                    return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+                    return Json(new { ret = "ok" ,msg = "删除成功！" }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    return Json(new { msg="没有成功删除信息！" }, JsonRequestBehavior.AllowGet);
+                    return Json(new { ret ="no",msg="没有成功删除信息！" }, JsonRequestBehavior.AllowGet);
                 }
             }
-            return Json(new { msg = "数据库中没有找到要删除的项目！" }, JsonRequestBehavior.AllowGet);
+            return Json(new {ret ="no", msg = "数据库中没有找到要删除的项目！" }, JsonRequestBehavior.AllowGet);
         }
         #endregion
         #region 求租信息

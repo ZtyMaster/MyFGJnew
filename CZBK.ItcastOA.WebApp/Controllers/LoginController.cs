@@ -199,10 +199,16 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         #region 微信获取用户名密码
         public ActionResult getUsernameAndPwd()
         {
+            
+            bool Shenhe =(bool)GongGaoService.LoadEntities(x => x.Items == 999).DefaultIfEmpty().ToList()[0].del;
             string wxid = Request["wxid"];
-            var temp = WxUserService.LoadEntities(x => x.Wx_id != null).FirstOrDefault();
+            var temp = Shenhe? WxUserService.LoadEntities(x => x.Wx_id != null).FirstOrDefault(): WxUserService.LoadEntities(x => x.Wx_id == wxid).FirstOrDefault();
+           
             if (temp != null)
             {
+                if (temp.UserInfo == null){
+                    return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
+                }
                 WXXInfo wxx = new WXXInfo();
                 wxx.Username = temp.UserInfo.UName;
                 wxx.Password = temp.UserInfo.UPwd;

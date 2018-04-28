@@ -320,6 +320,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                     TabInfo ti = new TabInfo();
                     ti.id = a.ID;
                     ti.name = a.City;
+                    ti.nameStr = a.City_str;
                     tiList.Add(ti);
                 }
                 return Json(new { ret = "ok", rows=tiList }, JsonRequestBehavior.AllowGet);

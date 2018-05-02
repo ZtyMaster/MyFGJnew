@@ -120,7 +120,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 return Json(new { rows = temp, total = userInfoParam.TotalCount }, JsonRequestBehavior.AllowGet);
             }
 
-        public object GetJson(UserInfoParam userInfoParam)
+        private object GetJson(UserInfoParam userInfoParam)
         {
             var actioninfolist = T_FGJHtmlDataService.LoadSearchFrist(userInfoParam, true, true);
             #region 基础信息进行查询

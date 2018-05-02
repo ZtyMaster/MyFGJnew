@@ -201,7 +201,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             ViewBag.City = T_CityService.LoadEntities(x => x.ID == LoginUser.CityID).FirstOrDefault().City;
             return View();
         }
-        public object GetJson(UserInfoParam userInfoParam)
+        private object GetJson(UserInfoParam userInfoParam)
         {
             var actioninfolist = T_FGJHtmlDataService.LoadSearchFrist(userInfoParam,true,true);
             #region 基础信息进行查询

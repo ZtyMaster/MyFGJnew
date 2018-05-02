@@ -57,7 +57,7 @@
     <property name="T_ZhuaiJiaBakService" ref="T_ZhuaiJiaBakService" />
     <property name="ScrherSAVEService" ref="ScrherSAVEService" />
     <property name="T_ScehMiShuService" ref="T_ScehMiShuService" />
-  
+    <property name="T_QuyuService" ref="T_QuyuService" />
     <property name="GongGaoService" ref="GongGaoService" />
   </object>
   

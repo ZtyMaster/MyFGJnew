@@ -39,6 +39,8 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         IBLL.IT_ScehMiShuService T_ScehMiShuService { get; set; }
 
         IBLL.IGongGaoService GongGaoService { get; set; }
+        IBLL.IT_QuyuService T_QuyuService { get; set; }
+
         short Delflag = (short)DelFlagEnum.Normarl;
 
         public ActionResult Index()
@@ -709,6 +711,76 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             T_FGJHtmlDataService.LoadSearchPM(Uxms);
             return Uxms.TotalCount;
         }
+        #region 获取选项卡条件数据
+        public ActionResult GetTabInfo()
+        {
+            var temp = T_ItemsService.LoadEntities(x => (x.Icons == 0 || x.Icons == 1 || x.Icons == 2 || x.Icons == 4) && x.Str_val != "0").DefaultIfEmpty().ToList();
+            List<TabInfo> tiMoney = new List<TabInfo>();
+            List<TabInfo> tiMianji = new List<TabInfo>();
+            List<TabInfo> tiHuxing = new List<TabInfo>();
+            List<TabInfo> tiZujin = new List<TabInfo>();
+            foreach (var a in temp)
+            {
+                switch (a.Icons)
+                {
+                    case 0:
+                        TabInfo money = new TabInfo();
+                        money.name = a.Str;
+                        money.id = a.ID;
+                        money.nameStr = a.Str_val;
+                        tiMoney.Add(money);
+                        break;
+                    case 1:
+                        TabInfo mianji = new TabInfo();
+                        mianji.name = a.Str;
+                        mianji.id = a.ID;
+                        mianji.nameStr = a.Str_val;
+                        tiMianji.Add(mianji);
+                        break;
+                    case 2:
+                        TabInfo huxing = new TabInfo();
+                        huxing.name = a.Str;
+                        huxing.id = a.ID;
+                        huxing.nameStr = a.Str_val;
+                        tiHuxing.Add(huxing);
+                        break;
+                    case 4:
+                        TabInfo zujin = new TabInfo();
+                        zujin.name = a.Str;
+                        zujin.id = a.ID;
+                        zujin.nameStr = a.Str_val;
+                        tiZujin.Add(zujin);
+                        break;
+                }
+            }
+            string cityStr = "";
+            int? cityid;
+            cityid = LoginUser.CityID;
+            var cityInfo = T_CityService.LoadEntities(x => x.ID == cityid).FirstOrDefault();
+            if (cityInfo != null)
+            {
+                cityStr = cityInfo.City_str;
+            }else
+            {
+                cityStr = "Liaoyang";
+            }
+            var rtmp = T_QuyuService.LoadEntities(x => x.T_City.City_str == cityStr).DefaultIfEmpty().ToList();
+            if (rtmp != null & rtmp[0] != null)
+            {
+                var tiArea = from a in rtmp
+                             select new
+                             {
+                                 id = a.ID,
+                                 name = a.QY_connet
+                             };
+                return Json(new { ret = "okAll", tiMoney = tiMoney, tiMianji = tiMianji, tiArea = tiArea, tiHuxing = tiHuxing, tiZujin = tiZujin }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { ret = "ok", tiMoney = tiMoney, tiMianji = tiMianji, tiHuxing = tiHuxing, tiZujin = tiZujin }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        #endregion
     }
-    
+
 }

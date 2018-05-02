@@ -235,6 +235,14 @@ namespace CZBK.ItcastOA.BLL
         }
     }   
 	
+	public partial class TtextService :BaseService<Ttext>,ITtextService
+    {
+        public override void SetCurretnDal()
+        {
+            CurrentDal = this.GetCurrentDbSession.TtextDal;
+        }
+    }   
+	
 	public partial class UserInfoService :BaseService<UserInfo>,IUserInfoService
     {
         public override void SetCurretnDal()

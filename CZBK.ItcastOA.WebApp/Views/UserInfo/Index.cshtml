@@ -278,8 +278,8 @@
                 columns: [[//c.UserName, c.UserPass, c.Email, c.RegTime
                       {
                           field: 'WxImg', title: '头像', align: 'center', formatter: function (v, r, i) {
-                          return "<img src=" + v + " height='50px' width='50px' />";
-                      }
+                              return "<img src=" + v + " height='50px' width='50px' />";
+                          }
                       },
 					  { field: 'wxName', title: '微信名称', align: 'center', },
                       {
@@ -290,13 +290,19 @@
                               return v == "1" ? "男" : "女";
                           }
                       },
-                      { field: 'Wxcity', title: '城市', align: 'center' },
+
+                     { field: 'Wxcity', title: '城市', align: 'center' },
+                    {
+                        field: 'ZjOrGr', title: '绑定类型', align: 'center', formatter: function (v, r, i) {
+                            return v == "0" ? "中介用户" : v=="1"?"个人用户":"";
+                        }
+                    },
                       {
                           field: 'AddTime', title: '申请绑定时间', align: 'center',
                           formatter: function (value, row, index) {
                               return Fromart_24(value);
                           }
-                      }, 
+                      },
                       {
                           field: "cz", title: "操作", align: 'center',
                           formatter: function (value, row, index) {
@@ -463,138 +469,156 @@
 
             $('#sexyyy').combobox('setValue', "");
         }
-        function loadData(pars) {
-            var city;
-            $.post("/UserInfo/GetJson", {}, function (rows) {
-                city = rows.rows;
-            })
-            $('#tt').datagrid({
-                url: '/UserInfo/GetUserInfo',
-                title: '用户数据表格',
-                height: $("#dgdiv").height()-2,
-                fitColumns: true, //列自适应
-                nowrap: true,
-                idField: 'ID',//主键列的列明
-                loadMsg: '正在加载用户的信息...',
-                pagination: true,//是否有分页
-                singleSelect: true,//是否单行选择
-                pageSize: 20,//页大小，一页多少条数据
-                pageNumber: 1,//当前页，默认的
-                pageList: [5, 10, 20],
-                queryParams: pars,//往后台传递参数
-                columns: [[//c.UserName, c.UserPass, c.Email, c.RegTime
-                    
-					  { field: 'UserName', title: '姓名' },
-                      { field: 'Remark', title: '备注' },
-                      { field: 'UserXiaoHao', title: '小号数量' },
-                      { field: 'Click', title: '点击次数' },
-                      { field: 'ThisMastr', title: '主从权限' },
-                      { field: 'MasterID', title: '主号ID' },
-                      {
+        function loadData(pars) {            
+            sltCity(function (res) {                
+                var city=res.rows;
+                $('#tt').datagrid({
+                    url: '/UserInfo/GetUserInfo',
+                    title: '用户数据表格',
+                    height: $("#dgdiv").height() - 2,
+                    fitColumns: true, //列自适应
+                    nowrap: true,
+                    idField: 'ID',//主键列的列明
+                    loadMsg: '正在加载用户的信息...',
+                    pagination: true,//是否有分页
+                    singleSelect: true,//是否单行选择
+                    pageSize: 20,//页大小，一页多少条数据
+                    pageNumber: 1,//当前页，默认的
+                    pageList: [5, 10, 20],
+                    queryParams: pars,//往后台传递参数
+                    columns: [[//c.UserName, c.UserPass, c.Email, c.RegTime
+
+                          { field: 'UserName', title: '姓名' },
+                          { field: 'Remark', title: '备注' },
+                          { field: 'UserXiaoHao', title: '小号数量' },
+                          { field: 'Click', title: '点击次数' },
+                          { field: 'ThisMastr', title: '主从权限' },
+                          { field: 'MasterID', title: '主号ID' },
+                          {
                               field: 'OverTime', title: '使用期限',
                               formatter: function (value, row, index) {
                                   return Fromart_24(value);
                               }
-                      },
-					  {
-					     field: 'RegTime', title: '时间',  align: 'right',
-					     formatter: function (value, row, index) {
-					         return Fromart_24(value);
-					     }
-					  },
-                     {
-                         field: 'CityID', title: '城市归属',
-                         formatter: function (value, row, index) {
-                             var strs;
-                             for (var i = 0; i < city.length;i++)
-                             {
-                                 if (city[i].ID == value)
-                                 {
-                                     strs = city[i].city;
+                          },
+                          {
+                              field: 'RegTime', title: '时间', align: 'right',
+                              formatter: function (value, row, index) {
+                                  return Fromart_24(value);
+                              }
+                          },
+                         {
+                             field: 'CityID', title: '城市归属',
+                             formatter: function (value, row, index) {
+                                 var strs;
+                                 for (var i = 0; i < city.length; i++) {
+                                     if (city[i].ID == value) {
+                                         strs = city[i].city;
+                                     }
                                  }
+                                 return (strs);
                              }
-                             return (strs);
-                         }
-                     },
-                      { field: 'GouMayPerson', title: '购买人姓名' },
-                       { field: 'GouMayPhoto', title: '购买人电话' },
-                        { field: 'Yxy', title: '营销员' },
-                     {
-                         field: 'Umoney',title:'金额'
-                     },
-                ]],
+                         },
+                          { field: 'GouMayPerson', title: '购买人姓名' },
+                           { field: 'GouMayPhoto', title: '购买人电话' },
+                            { field: 'Yxy', title: '营销员' },
+                         {
+                             field: 'Umoney', title: '金额'
+                         }, { field: 'wxzh',title:'微信绑定' },
+                         {
+                             field: 'CRUT', title: '操作', formatter: function (value, row, index) {
+                                 var id = row.ID;
+                                 return "&nbsp&nbsp<a href='javascript: sltXiaoHao(" + id + ")' class='l-btn' style='padding:2px 6px' >查看所属小号</a>";
+                             }
+                         },
+                    ]],
 
-                toolbar: [{
-                    id: 'btnDelete',
-                    text: '删除',
-                    iconCls: 'icon-remove',
-                    handler: function () {
+                    toolbar: [{
+                        id: 'btnDelete',
+                        text: '删除',
+                        iconCls: 'icon-remove',
+                        handler: function () {
 
-                        deleteInfo();
-                    }
-                }, {
-                    id: 'btnAdd',
-                    text: '添加',
-                    iconCls: 'icon-add',
-                    handler: function () {
+                            deleteInfo();
+                        }
+                    }, {
+                        id: 'btnAdd',
+                        text: '添加',
+                        iconCls: 'icon-add',
+                        handler: function () {
 
-                        addInfo();
-                    }
-                }, {
-                    id: 'btnEdit',
-                    text: '编辑',
-                    iconCls: 'icon-edit',
-                    handler: function () {
+                            addInfo();
+                        }
+                    }, {
+                        id: 'btnEdit',
+                        text: '编辑',
+                        iconCls: 'icon-edit',
+                        handler: function () {
 
-                        eidtInfo();
-                    }
-                },
+                            eidtInfo();
+                        }
+                    },
+                    {
+                        id: 'btnEditPwd',
+                        text: '修改密码',
+                        iconCls: 'icon-edit',
+                        handler: function () {
+                            editpwdInfo();
+                        }
+                    }, {
+                        id: 'btnSetUserRole',
+                        text: '为用户分配角色',
+                        iconCls: 'icon-edit',
+                        handler: function () {
+                            setUserRoleInfo();
+                        }
+                    },
                 {
-                    id: 'btnEditPwd',
-                    text: '修改密码',
+                    id: 'btnSetUserAction',
+                    text: '为为特殊用户分配权限',
                     iconCls: 'icon-edit',
                     handler: function () {
-                        editpwdInfo();
+                        SetUserAction();
                     }
                 }, {
-                    id: 'btnSetUserRole',
-                    text: '为用户分配角色',
+                    id: 'btnSetUserAction',
+                    text: '显示主号',
                     iconCls: 'icon-edit',
                     handler: function () {
-                        setUserRoleInfo();
+                        var pars = {
+                            Mxitems: true
+                        };
+                        loadData(pars);
                     }
-                },
-            {
-                id: 'btnSetUserAction',
-                text: '为为特殊用户分配权限',
-                iconCls: 'icon-edit',
-                handler: function () {
-                    SetUserAction();
+                }, {
+                    id: 'btnSetUserAction',
+                    text: '显示小号',
+                    iconCls: 'icon-edit',
+                    handler: function () {
+                        var pars = {
+                            Mxitems: false
+                        };
+                        loadData(pars);
+                    }
                 }
-            },{
-                id: 'btnSetUserAction',
-                text: '显示主号',
-                iconCls: 'icon-edit',
-                handler: function () {
-                    var pars = {
-                        Mxitems: true
-                    };
-                    loadData(pars);
-                }
-            },{
-                id: 'btnSetUserAction',
-                text: '显示小号',
-                iconCls: 'icon-edit',
-                handler: function () {
-                    var pars = {
-                        Mxitems: false
-                    };
-                    loadData(pars);
-                }
-            }
-                ],
-            });
+                    ],
+                });
+            })
+          
         }
+        //获取城市
+        function sltCity(callBack, dataType) {
+            $.post("/UserInfo/GetJson", {},function(res) {
+                if (res != null && res != "") {
+                    if (callBack) {                    
+                        if ($.isFunction(callBack)) {
+                            callBack(res);
+                        } else {
+                            console.log("callBack is not a function");
+                        }
+                    }
+                }
+            }, dataType)        
+        };
         //为特殊用户分配权限
         function SetUserAction() {
             var rows = $('#tt').datagrid('getSelections');
@@ -990,12 +1014,14 @@
             $('#XTgonggao').window('open')            
         }
         function Bangdingid(a) {
+          
+
             var rows = $('#tt').datagrid('getSelections');
            
             var Wid =  $("#WxIDipt").val();
             if (!a) {
                 if (rows[0].UserInfo.length <= 0) {
-                    $.messager.alert("提醒", "改账号没有要解除绑定的微信账号！");
+                    $.messager.alert("提醒", "该账号没有要解除绑定的微信账号！");
                     return;
                 }
                 if (rows.length <= 0) {
@@ -1006,7 +1032,15 @@
                 Wid = rows[0].ID;
             }
             else {
+                var rdogt = $('a[group="g2"].l-btn-selected').text();
+                if (rdogt.length <= 0) {
+                    $.messager.alert("提醒", "没有选择用户类型！");
+                    return;
+                }
+                var zjorgr = rdogt == "中介用户" ? 0 : 1;
+
                 var Uid = $("#LoadWxUid").combobox("getValue");
+
                 if (Uid.length <= 0 ) {
                     $.messager.alert("提醒", "系统错误，没有选中要给予的ID值，联系管理员！");
                     return;
@@ -1017,9 +1051,10 @@
                 $.messager.alert("提醒", "系统错误，没有选中要给予的ID值，联系管理员！");
                 return;
             }
+          
             $.messager.confirm('系统提示', '是否确认信息?', function (r) {
                 if (r) {
-                    $.post("/UserInfo/WxuserBandUserinfo", { "Uid": Uid, "Wid": Wid, Jiechu:(a?null:true) }, function (sda) {
+                    $.post("/UserInfo/WxuserBandUserinfo", { "Uid": Uid, "Wid": Wid, Jiechu: (a ? null : true), "zjorgr": zjorgr }, function (sda) {
                         
                         if (sda == "ok") {
                             $("#tt").datagrid("reload");
@@ -1042,7 +1077,121 @@
             var pars = { ScName:str};
             MinApp(pars);
         }
+        //查看所属小号
+        function sltXiaoHao(id) {
 
+            sltCity(function (res) {
+                var city = res.rows;
+                var pars = { myxh: id };
+                $('#tt').datagrid({
+                    url: '/UserInfo/STLxiaohao',
+                    title: '用户数据表格',
+                    height: $("#dgdiv").height() - 2,
+                    fitColumns: true, //列自适应
+                    nowrap: true,
+                    idField: 'ID',//主键列的列明
+                    loadMsg: '正在加载用户的信息...',
+                    pagination: true,//是否有分页
+                    singleSelect: true,//是否单行选择
+                    pageSize: 20,//页大小，一页多少条数据
+                    pageNumber: 1,//当前页，默认的
+                    pageList: [5, 10, 20],
+                    queryParams: pars,//往后台传递参数
+                    columns: [[//c.UserName, c.UserPass, c.Email, c.RegTime
+
+                          { field: 'UserName', title: '姓名' },
+                          { field: 'Remark', title: '备注' },
+                          { field: 'Click', title: '点击次数' },
+                          { field: 'ThisMastr', title: '主从权限' },
+                          { field: 'MasterID', title: '主号ID' },
+                          {
+                              field: 'OverTime', title: '使用期限',
+                              formatter: function (value, row, index) {
+                                  return Fromart_24(value);
+                              }
+                          },
+                          {
+                              field: 'RegTime', title: '时间', align: 'right',
+                              formatter: function (value, row, index) {
+                                  return Fromart_24(value);
+                              }
+                          },
+                         {
+                             field: 'CityID', title: '城市归属',
+                             formatter: function (value, row, index) {
+                                 var strs;
+                                 for (var i = 0; i < city.length; i++) {
+                                     if (city[i].ID == value) {
+                                         strs = city[i].city;
+                                     }
+                                 }
+                                 return (strs);
+                             }
+                         },
+                          { field: 'GouMayPerson', title: '购买人姓名' },
+                           { field: 'GouMayPhoto', title: '购买人电话' },
+                           { field: 'wxzh', title: '微信绑定' },
+                            { field: 'Yxy', title: '营销员' },
+                         {
+                             field: 'Umoney', title: '金额'
+                         }
+                    ]],
+
+                    toolbar: [{
+                        id: 'btnDelete',
+                        text: '删除',
+                        iconCls: 'icon-remove',
+                        handler: function () {
+
+                            deleteInfo();
+                        }
+                    }, {
+                        id: 'btnAdd',
+                        text: '添加',
+                        iconCls: 'icon-add',
+                        handler: function () {
+
+                            addInfo();
+                        }
+                    }, {
+                        id: 'btnEdit',
+                        text: '编辑',
+                        iconCls: 'icon-edit',
+                        handler: function () {
+
+                            eidtInfo();
+                        }
+                    },
+                    {
+                        id: 'btnEditPwd',
+                        text: '修改密码',
+                        iconCls: 'icon-edit',
+                        handler: function () {
+                            editpwdInfo();
+                        }
+                    }, {
+                        id: 'btnSetUserRole',
+                        text: '为用户分配角色',
+                        iconCls: 'icon-edit',
+                        handler: function () {
+                            setUserRoleInfo();
+                        }
+                    },{
+                    id: 'btnSetUserAction',
+                    text: '显示主号',
+                    iconCls: 'icon-edit',
+                    handler: function () {
+                        var pars = {
+                            Mxitems: true
+                        };
+                        loadData(pars);
+                    }
+                }
+                    ],
+                });
+            });
+          
+        }
     </script>
 
 </head>
@@ -1064,19 +1213,32 @@
             </thead>
         </table>
         <!---------------微信绑定账号--------------------->
-        <div id="Wxband" class="easyui-window" data-options="title:'微信绑定系统账号',inline:true" style="width:250px;height:150px;padding:10px">
+        <div id="Wxband" class="easyui-window" data-options="title:'微信绑定系统账号',inline:true" style="width:350px;height:240px;padding:10px">
             <div>请选择要绑定的账号</div>
             <input  type="hidden" value="" id="WxIDipt" />
-            <input class="easyui-combobox"
-                   name="WxUserId" 
-                   id="LoadWxUid"
-                   data-options="url:'/UserInfo/GetNotBandWxUser',
+            
+                
+                <div class="easyui-panel" style="padding:10px; width:300px; ">
+                    <input class="easyui-combobox"
+                           name="WxUserId"
+                           id="LoadWxUid"
+                           data-options="url:'/UserInfo/GetNotBandWxUser',
                    method:'POST',
                    valueField:'id',
                    textField:'text',
                    panelHeight:'200'">
+                    <br />
+                    <div  style="margin-top:5px">
+                        <a href="#" class="easyui-linkbutton" name="rdogt"  data-options="toggle:true,group:'g2',selected:true">中介用户</a>
+                        <a href="#" class="easyui-linkbutton" name="rdogt" data-options="toggle:true,group:'g2'">个人用户</a>
+                    </div>
+                    
+                    <br />
+                   
+                </div>
             <div style="text-align:right"><button style="margin:15px" onclick="Bangdingid(true)">确认绑定</button></div>
-        </div>
+              
+            </div>
 
 
         <div id="WxSchecr" class="easyui-window" data-options="title:'微信绑定系统账号',inline:true" style="width:250px;height:150px;padding:10px">

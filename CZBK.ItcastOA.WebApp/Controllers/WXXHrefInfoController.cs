@@ -354,6 +354,22 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             }
             return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
         }
+
+        #region 绑定推荐人
+        public ActionResult BandPerson() {
+            if (Request["Person"] == null || Request["Person"].Length <= 0)
+            {
+                return Json(new { ret = "没有给予推荐人" }, JsonRequestBehavior.AllowGet);
+            }
+            else {
+                string Person = Request["Person"];
+                return Json(new { ret = "" }, JsonRequestBehavior.AllowGet);
+            }
+            
+        }
+        
+        #endregion
+
     }
     public class KFinfo
     {

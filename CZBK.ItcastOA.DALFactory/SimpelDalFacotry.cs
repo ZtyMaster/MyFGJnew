@@ -380,6 +380,19 @@ namespace CZBK.ItcastOA.DALFactory
             return obj as ITLoginbakDal;
         }
 		
+	    public static ITtextDal CreateTtextDal()
+        {
+
+            string classFulleName = ConfigurationManager.AppSettings["NameSpace"] + ".TtextDal";
+
+
+            //object obj = Assembly.Load(ConfigurationManager.AppSettings["DalAssembly"]).CreateInstance(classFulleName, true);
+            var obj  = CreateInstance(ConfigurationManager.AppSettings["DalAssemblyPath"], classFulleName);
+
+
+            return obj as ITtextDal;
+        }
+		
 	    public static IUserInfoDal CreateUserInfoDal()
         {
 

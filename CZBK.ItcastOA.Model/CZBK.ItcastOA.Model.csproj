@@ -101,6 +101,9 @@
     <Compile Include="TLoginbak.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Ttext.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="T_AppOpen.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

@@ -435,6 +435,21 @@ namespace CZBK.ItcastOA.DALFactory
             set { _TLoginbakDal = value; }
         }
 	
+		private ITtextDal _TtextDal;
+        public ITtextDal TtextDal
+        {
+            get
+            {
+                if(_TtextDal == null)
+                {
+                   // _TtextDal = new TtextDal();
+				    _TtextDal =AbstractFactory.CreateTtextDal();
+                }
+                return _TtextDal;
+            }
+            set { _TtextDal = value; }
+        }
+	
 		private IUserInfoDal _UserInfoDal;
         public IUserInfoDal UserInfoDal
         {

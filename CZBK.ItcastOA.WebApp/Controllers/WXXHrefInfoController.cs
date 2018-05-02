@@ -379,14 +379,10 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 return Json(new { ret = "ok", phoneNum = phoneNum }, JsonRequestBehavior.AllowGet);
             }
             return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
-        }
-
-       
+        }       
         
         
-        #endregion
-
-            #region 绑定推荐人
+        #region 绑定推荐人
         public ActionResult BandPerson()
         {
             //   Person 推进人名称   uid  微信表ID
@@ -400,9 +396,9 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 var personlist = T_YxPersonService.LoadEntities(x => x.PersonName == Person).FirstOrDefault();
                 if (personlist != null)
                 {
-                    long uid = Convert.ToInt64(Request["uid"]);
+                    string uid = Request["uid"];
 
-                    var iwx = IWxUserService.LoadEntities(x => x.ID == uid).FirstOrDefault();
+                    var iwx = IWxUserService.LoadEntities(x => x.Wx_id == uid).FirstOrDefault();
                     if (iwx != null)
                     {
                         iwx.YxPerson_Id = personlist.ID;

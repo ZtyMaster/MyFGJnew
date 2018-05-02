@@ -72,6 +72,23 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             uip.Isee = Request["Isee"] != null ? Convert.ToBoolean(Request["Isee"]) : false;
             uip.C_id = LoginUser.ID;
             uip.quyu = Request["IsAPPsche"] != null ? Request["IsAPPsche"].ToString() : "no";
+            if (Request["Tval"] != null)
+            {
+                string str = Request["Tval"];
+                string[] list = str.Split(',');
+                for (int i = 0; i < list.Length; i++)
+                {
+                    string[] ti = list[i].Split('>');
+                    if (i == 0)
+                    {
+                        uip.money = ti[0];
+                    }
+                    else if (i == 1)
+                    {
+                        uip.Pingmu = ti[0];
+                    }
+                }
+            }
             var temp = T_ChuZhuInfoService.LoadSearchEntities(uip);
             var Rtemo = from a in temp
                         select new

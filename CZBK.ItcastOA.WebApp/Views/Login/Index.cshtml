@@ -55,7 +55,7 @@
         })
 
         function toTest() {
-            $.post("/WXXHrefInfo/GetHrefForCS", { "rows": 15, "page": 1, "cityStr": "Dalian" }, function (data) {
+            $.post("/WXXHrefInfo/GetHrefForCZ", { "rows": 15, "page": 1, "cityStr": "Liaoyang", "Tval": "54>1500-2000元,43>90-110㎡","IsAPPsche":"yes" }, function (data) {
                 alert(data)
             })
         }
@@ -275,7 +275,7 @@
         </div>
     </div>
 
-    <input hidden="hidden" type="button" onclick="toTest()" value="测试"/>
+    <input  type="button" onclick="toTest()" value="测试"/>
 
     <div id="floatTools" class="rides-cs" style="height:246px;">
         <div class="floatL">

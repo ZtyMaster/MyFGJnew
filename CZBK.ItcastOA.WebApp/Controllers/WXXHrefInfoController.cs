@@ -48,6 +48,22 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             uip.Str = Request["Str"] != null ? Request["Str"] : null;
             uip.Isee = Request["Isee"] != null ? Convert.ToBoolean(Request["Isee"]) : false;
             uip.quyu = Request["IsAPPsche"] != null ? Request["IsAPPsche"].ToString() : "no";
+            if (Request["Tval"] != null)
+            {
+                string str = Request["Tval"];
+                string[] list = str.Split(',');
+                for (int i = 0; i < list.Length; i++)
+                {
+                    string[] ti = list[i].Split('>');
+                    if(i == 0)
+                    {
+                        uip.money = ti[0];
+                    }else if(i == 1)
+                    {
+                        uip.Pingmu = ti[0];
+                    }
+                }
+            }
             var temp = T_ChuZhuInfoService.LoadSearchEntities(uip);
             var Rtemo = from a in temp
                         select new
@@ -260,10 +276,11 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         #region 获取选项卡条件数据
         public ActionResult GetTabInfo()
         {
-            var temp = T_ItemsService.LoadEntities(x => (x.Icons == 0 || x.Icons == 1 || x.Icons == 2) && x.Str_val != "0").DefaultIfEmpty().ToList();
+            var temp = T_ItemsService.LoadEntities(x => (x.Icons == 0 || x.Icons == 1 || x.Icons == 2|| x.Icons == 4) && x.Str_val != "0").DefaultIfEmpty().ToList();
             List<TabInfo> tiMoney = new List<TabInfo>();
             List<TabInfo> tiMianji = new List<TabInfo>(); 
             List<TabInfo> tiHuxing = new List<TabInfo>();
+            List<TabInfo> tiZujin = new List<TabInfo>();
             foreach (var a in temp)
             {
                 switch (a.Icons)
@@ -289,6 +306,13 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                         huxing.nameStr = a.Str_val;
                         tiHuxing.Add(huxing);
                         break;
+                    case 4:
+                        TabInfo zujin = new TabInfo();
+                        zujin.name = a.Str;
+                        zujin.id = a.ID;
+                        zujin.nameStr = a.Str_val;
+                        tiZujin.Add(zujin);
+                        break;
                 }
             }
             var cityStr = Request["cityStr"] ;
@@ -301,11 +325,11 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                                id = a.ID,
                                name = a.QY_connet
                            };
-                return Json(new { ret = "okAll", tiMoney = tiMoney, tiMianji = tiMianji, tiArea= tiArea,tiHuxing= tiHuxing }, JsonRequestBehavior.AllowGet);
+                return Json(new { ret = "okAll", tiMoney = tiMoney, tiMianji = tiMianji, tiArea= tiArea,tiHuxing= tiHuxing, tiZujin= tiZujin }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return Json(new { ret = "ok", tiMoney = tiMoney, tiMianji = tiMianji , tiHuxing = tiHuxing }, JsonRequestBehavior.AllowGet);
+                return Json(new { ret = "ok", tiMoney = tiMoney, tiMianji = tiMianji , tiHuxing = tiHuxing, tiZujin= tiZujin }, JsonRequestBehavior.AllowGet);
             }
         }
         #endregion
@@ -354,6 +378,23 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             }
             return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
         }
+        #region 查看图片
+        public ActionResult SeeImageCZ()
+        {
+            int id = int.Parse(Request["id"]);
+            var temp = T_ChuZhuInfoService.LoadEntities(x => x.ID == id).FirstOrDefault();
+            string imageSTR = temp.Images;
+            string Masimage = imageSTR.Replace("有---", string.Empty);
+            if (temp != null)
+            {
+                return Content(Common.SerializerHelper.SerializeToString(new { sData = Masimage, msg = "ok" }));
+            }
+            else
+            {
+                return Content(Common.SerializerHelper.SerializeToString(new { msg = "no" }));
+            }
+        }
+        #endregion
     }
     public class KFinfo
     {

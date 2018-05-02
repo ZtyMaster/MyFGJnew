@@ -30,7 +30,9 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         IBLL.IT_QiuZhuQiuGouService T_QiuZhuQiuGouService { get; set; }
         IBLL.IT_ChuZhuInfoService T_ChuZhuInfoService { get; set; }
         IBLL.IT_QuyuService T_QuyuService { get; set; }
-
+        IBLL.IT_YxPersonService T_YxPersonService { set; get; }
+         
+        IBLL.IWxUserService IWxUserService { get; set; }
 
         public ActionResult Index()
         {
@@ -357,13 +359,33 @@ namespace CZBK.ItcastOA.WebApp.Controllers
 
         #region 绑定推荐人
         public ActionResult BandPerson() {
+            //   Person 推进人名称   uid  微信表ID
             if (Request["Person"] == null || Request["Person"].Length <= 0)
             {
                 return Json(new { ret = "没有给予推荐人" }, JsonRequestBehavior.AllowGet);
             }
             else {
-                string Person = Request["Person"];
-                return Json(new { ret = "" }, JsonRequestBehavior.AllowGet);
+                string Person = Request["Person"].Trim();
+                var personlist= T_YxPersonService.LoadEntities(x => x.PersonName == Person).FirstOrDefault();
+                if (personlist != null) {
+                    long uid = Convert.ToInt64(Request["uid"]);
+
+                    var iwx= IWxUserService.LoadEntities(x => x.ID == uid).FirstOrDefault();
+                    if (iwx != null) {
+                        iwx.YxPerson_Id = personlist.ID;
+                        IWxUserService.EditEntity(iwx);
+                        return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new { ret = "系统不存在该名微信用户！" }, JsonRequestBehavior.AllowGet);
+                    }
+                    
+                }
+                else {
+                    return Json(new { ret = "系统不存在该名推荐人，请重新确认！" }, JsonRequestBehavior.AllowGet);
+                }
+                
             }
             
         }

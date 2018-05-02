@@ -754,11 +754,12 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 }
             }
             string cityStr = "";
-            T_City cityid = new T_City();
-            cityid = LoginUser.T_City;
-            if (LoginUser.CityID != null)
+            int? cityid;
+            cityid = LoginUser.CityID;
+            var cityInfo = T_CityService.LoadEntities(x => x.ID == cityid).FirstOrDefault();
+            if (cityInfo != null)
             {
-                cityStr = cityid.City_str;
+                cityStr = cityInfo.City_str;
             }else
             {
                 cityStr = "Liaoyang";

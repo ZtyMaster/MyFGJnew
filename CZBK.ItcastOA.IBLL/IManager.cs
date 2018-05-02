@@ -150,6 +150,11 @@ namespace CZBK.ItcastOA.IBLL
        
     }   
 	
+	public partial interface ITtextService : IBaseService<Ttext>
+    {
+       
+    }   
+	
 	public partial interface IUserInfoService : IBaseService<UserInfo>
     {
        

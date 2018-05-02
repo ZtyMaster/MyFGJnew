@@ -155,22 +155,52 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 C_id = bol?0: LoginUser.ID 
             };                     
             var userInfoList = UserInfoService.LoadSearchEntities(userInfoParam);
-           var temp = from u in userInfoList
-                      select new { ID = u.ID, UserName = u.UName, UserPass = u.UPwd, Remark = u.Remark, RegTime = u.SubTime, OverTime=u.OverTime,
-                          UserXiaoHao=u.UserXiaoHao,
-                          Click=u.Click,
-                          ThisMastr=u.ThisMastr,
-                          MasterID=u.MasterID,
-                          CityID=u.CityID,
-                          Umoney=u.Umoney,
-                          GouMayPerson=u.khName,
-                          GouMayPhoto=u.KhPhoto,
-                          Yxy=u.T_YxPerson1.PersonName
-                      };
-           return Json(new { rows = temp, total = userInfoParam.TotalCount }, JsonRequestBehavior.AllowGet);
+            var temp = Format(userInfoList);
+            return Json(new { rows = temp, total = userInfoParam.TotalCount }, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+        #region 查看所属小号
+        public ActionResult STLxiaohao() {
+            int pageIndex = Request["page"] != null ? int.Parse(Request["page"]) : 1;
+            int pageSize = Request["rows"] != null ? int.Parse(Request["rows"]) : 25;
+            int totalCount = 0;
+            if (Request["myxh"] != null)
+            {
+                int myxiaohao = Convert.ToInt32(Request["myxh"]);
+                var userInfoList = UserInfoService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.MasterID == myxiaohao, x => x.ID, true);
+                var temp = Format(userInfoList);
+                return Json(new { rows = temp, total = totalCount }, JsonRequestBehavior.AllowGet);
+            }
+            else {
+                return Json(new { rows = "", total = totalCount }, JsonRequestBehavior.AllowGet);
+            }
+            
         }
         #endregion
 
+        private object Format(IQueryable<UserInfo> userInfoList) {
+            var temp = from u in userInfoList
+                       select new
+                       {
+                           ID = u.ID,
+                           UserName = u.UName,
+                           UserPass = u.UPwd,
+                           Remark = u.Remark,
+                           RegTime = u.SubTime,
+                           OverTime = u.OverTime,
+                           UserXiaoHao = u.UserXiaoHao,
+                           Click = u.Click,
+                           ThisMastr = u.ThisMastr,
+                           MasterID = u.MasterID,
+                           CityID = u.CityID,
+                           Umoney = u.Umoney,
+                           GouMayPerson = u.khName,
+                           GouMayPhoto = u.KhPhoto,
+                           Yxy = u.T_YxPerson1.PersonName,
+                           wxzh = u.WxUsers.Select(x => x.UserInfoID == u.ID).Count() > 0 ? u.WxUsers.Where(x => x.UserInfoID == u.ID).FirstOrDefault().wxName : "",
+                       };
+            return temp;
+        }
         #region 删除用户数据
         public ActionResult DeleteUserInfo()
         {
@@ -506,14 +536,22 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             int Uid =Convert.ToInt32(Request["Uid"]);
             long Wid = Convert.ToInt32(Request["Wid"]);
             bool IsJieC = Request["Jiechu"] == "null" ? false : true;
+            
             var iwu = WxUserService.LoadEntities(x => x.ID == Wid).FirstOrDefault();
+            if (Request["zjorgr"] != null) {
+                iwu.ZjOrGr = Convert.ToBoolean(Convert.ToInt32(Request["zjorgr"]));
+            }
+            
             if (IsJieC)
             {
                 iwu.UserInfoID = null;
+
+               
             }
             else {
                 iwu.UserInfoID = Uid;
-            }         
+            }
+
             string ret = "ok";
             if (!WxUserService.EditEntity(iwu))
             {
@@ -560,7 +598,8 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                                a.Wxgender,
                                a.Wxprovince,
                                a.Wxcity,
-                               UserInfo = a.UserInfo == null ? "" : a.UserInfo.UName
+                               UserInfo = a.UserInfo == null ? "" : a.UserInfo.UName,
+                               a.ZjOrGr
                            };
 
                 return Json(new { rows =  temp, total = totalCount }, JsonRequestBehavior.AllowGet);

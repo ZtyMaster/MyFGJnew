@@ -39,6 +39,7 @@ namespace CZBK.ItcastOA.Model
             this.T_ScehMiShu = new HashSet<T_ScehMiShu>();
             this.T_AppOpen = new HashSet<T_AppOpen>();
             this.WxUsers = new HashSet<WxUser>();
+            this.Ttexts = new HashSet<Ttext>();
         }
     
         public int ID { get; set; }
@@ -109,5 +110,7 @@ namespace CZBK.ItcastOA.Model
         public virtual ICollection<T_AppOpen> T_AppOpen { get; set; }
         [JsonIgnore]
         public virtual ICollection<WxUser> WxUsers { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Ttext> Ttexts { get; set; }
     }
 }

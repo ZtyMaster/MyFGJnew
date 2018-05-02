@@ -25,7 +25,10 @@ namespace CZBK.ItcastOA.Model
         public Nullable<int> UserInfoID { get; set; }
         public Nullable<bool> Del { get; set; }
         public Nullable<System.DateTime> AddTime { get; set; }
+        public Nullable<bool> ZjOrGr { get; set; }
+        public Nullable<long> YxPerson_Id { get; set; }
     
         public virtual UserInfo UserInfo { get; set; }
+        public virtual T_YxPerson T_YxPerson { get; set; }
     }
 }

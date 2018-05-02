@@ -57,5 +57,6 @@ namespace CZBK.ItcastOA.Model
         public DbSet<T_ScehMiShu> T_ScehMiShu { get; set; }
         public DbSet<T_AppOpen> T_AppOpen { get; set; }
         public DbSet<WxUser> WxUsers { get; set; }
+        public DbSet<Ttext> Ttexts { get; set; }
     }
 }

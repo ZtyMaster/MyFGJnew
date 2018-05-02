@@ -404,6 +404,15 @@
           <Property Name="LGip" Type="nvarchar" MaxLength="50" />
           <Property Name="LGbak" Type="nvarchar" MaxLength="250" />
         </EntityType>
+        <EntityType Name="Ttext">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AddTime" Type="datetime" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" />
+          <Property Name="AddUser" Type="int" />
+        </EntityType>
         <EntityType Name="UserInfo">
           <Key>
             <PropertyRef Name="ID" />
@@ -477,6 +486,8 @@
           <Property Name="UserInfoID" Type="int" />
           <Property Name="Del" Type="bit" />
           <Property Name="AddTime" Type="datetime" />
+          <Property Name="ZjOrGr" Type="bit" />
+          <Property Name="YxPerson_Id" Type="bigint" />
         </EntityType>
         <Association Name="FK_ActionInfoR_UserInfo_ActionInfo">
           <End Role="ActionInfo" Type="Self.ActionInfo" Multiplicity="1" />
@@ -858,6 +869,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Ttext_user">
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="0..1" />
+          <End Role="Ttext" Type="Self.Ttext" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Ttext">
+              <PropertyRef Name="AddUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserInfo">
           <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="1" />
           <End Role="SeeQzCz" Type="Self.SeeQzCz" Multiplicity="*" />
@@ -1012,6 +1035,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_WxUser_yxperson">
+          <End Role="T_YxPerson" Type="Self.T_YxPerson" Multiplicity="0..1" />
+          <End Role="WxUser" Type="Self.WxUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_YxPerson">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="WxUser">
+              <PropertyRef Name="YxPerson_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="OAModelStoreContainer">
           <EntitySet Name="ActionInfo" EntityType="Self.ActionInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BumenInfoSet" EntityType="Self.BumenInfoSet" Schema="dbo" store:Type="Tables" />
@@ -1043,6 +1078,7 @@
           <EntitySet Name="T_YxPerson" EntityType="Self.T_YxPerson" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_ZhuaiJiaBak" EntityType="Self.T_ZhuaiJiaBak" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TLoginbak" EntityType="Self.TLoginbak" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ttext" EntityType="Self.Ttext" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserInfo" EntityType="Self.UserInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserInfo_City" EntityType="Self.UserInfo_City" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserInfoDepartment" EntityType="Self.UserInfoDepartment" Schema="dbo" store:Type="Tables" />
@@ -1173,6 +1209,10 @@
             <End Role="UserInfo" EntitySet="UserInfo" />
             <End Role="TLoginbak" EntitySet="TLoginbak" />
           </AssociationSet>
+          <AssociationSet Name="FK_Ttext_user" Association="Self.FK_Ttext_user">
+            <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="Ttext" EntitySet="Ttext" />
+          </AssociationSet>
           <AssociationSet Name="FK_UserInfo" Association="Self.FK_UserInfo">
             <End Role="UserInfo" EntitySet="UserInfo" />
             <End Role="SeeQzCz" EntitySet="SeeQzCz" />
@@ -1219,6 +1259,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_WxUser_UserInfo" Association="Self.FK_WxUser_UserInfo">
             <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="WxUser" EntitySet="WxUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WxUser_yxperson" Association="Self.FK_WxUser_yxperson">
+            <End Role="T_YxPerson" EntitySet="T_YxPerson" />
             <End Role="WxUser" EntitySet="WxUser" />
           </AssociationSet>
         </EntityContainer>
@@ -1431,6 +1475,15 @@
             <End Role="UserInfo" EntitySet="UserInfo" />
             <End Role="WxUser" EntitySet="WxUsers" />
           </AssociationSet>
+          <EntitySet Name="Ttexts" EntityType="OAModel.Ttext" />
+          <AssociationSet Name="FK_WxUser_yxperson" Association="OAModel.FK_WxUser_yxperson">
+            <End Role="T_YxPerson" EntitySet="T_YxPerson" />
+            <End Role="WxUser" EntitySet="WxUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ttext_user" Association="OAModel.FK_Ttext_user">
+            <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="Ttext" EntitySet="Ttexts" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="UserInfo">
           <Key>
@@ -1479,6 +1532,7 @@
           <NavigationProperty Name="T_ScehMiShu" Relationship="OAModel.FK_T_ScehMiShu_UserInfo" FromRole="UserInfo" ToRole="T_ScehMiShu" />
           <NavigationProperty Name="T_AppOpen" Relationship="OAModel.FK_T_AppOpen_UserInfo" FromRole="UserInfo" ToRole="T_AppOpen" />
           <NavigationProperty Name="WxUsers" Relationship="OAModel.FK_WxUser_UserInfo" FromRole="UserInfo" ToRole="WxUser" />
+          <NavigationProperty Name="Ttexts" Relationship="OAModel.FK_Ttext_user" FromRole="UserInfo" ToRole="Ttext" />
         </EntityType>
         <EntityType Name="ActionInfo">
           <Key>
@@ -2076,6 +2130,7 @@
           <Property Name="RuzTime" Type="DateTime" Precision="3" />
           <NavigationProperty Name="UserInfo" Relationship="OAModel.FK_T_YxPerson_UserInfo" FromRole="T_YxPerson" ToRole="UserInfo" />
           <NavigationProperty Name="UserInfoes" Relationship="OAModel.FK_UserInfo_YxPerson" FromRole="T_YxPerson" ToRole="UserInfo" />
+          <NavigationProperty Name="WxUsers" Relationship="OAModel.FK_WxUser_yxperson" FromRole="T_YxPerson" ToRole="WxUser" />
         </EntityType>
         <Association Name="FK_T_YxPerson_UserInfo">
           <End Type="OAModel.UserInfo" Role="UserInfo" Multiplicity="0..1" />
@@ -2436,6 +2491,9 @@
           <Property Name="Del" Type="Boolean" />
           <Property Name="AddTime" Type="DateTime" Precision="3" />
           <NavigationProperty Name="UserInfo" Relationship="OAModel.FK_WxUser_UserInfo" FromRole="WxUser" ToRole="UserInfo" />
+          <Property Name="ZjOrGr" Type="Boolean" />
+          <Property Name="YxPerson_Id" Type="Int64" />
+          <NavigationProperty Name="T_YxPerson" Relationship="OAModel.FK_WxUser_yxperson" FromRole="WxUser" ToRole="T_YxPerson" />
         </EntityType>
         <Association Name="FK_WxUser_UserInfo">
           <End Type="OAModel.UserInfo" Role="UserInfo" Multiplicity="0..1" />
@@ -2446,6 +2504,40 @@
             </Principal>
             <Dependent Role="WxUser">
               <PropertyRef Name="UserInfoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Ttext">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AddTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AddUser" Type="Int32" />
+          <NavigationProperty Name="UserInfo" Relationship="OAModel.FK_Ttext_user" FromRole="Ttext" ToRole="UserInfo" />
+        </EntityType>
+        <Association Name="FK_WxUser_yxperson">
+          <End Type="OAModel.T_YxPerson" Role="T_YxPerson" Multiplicity="0..1" />
+          <End Type="OAModel.WxUser" Role="WxUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_YxPerson">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="WxUser">
+              <PropertyRef Name="YxPerson_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ttext_user">
+          <End Type="OAModel.UserInfo" Role="UserInfo" Multiplicity="0..1" />
+          <End Type="OAModel.Ttext" Role="Ttext" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Ttext">
+              <PropertyRef Name="AddUser" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2946,6 +3038,8 @@
           <EntitySetMapping Name="WxUsers">
             <EntityTypeMapping TypeName="OAModel.WxUser">
               <MappingFragment StoreEntitySet="WxUser">
+                <ScalarProperty Name="YxPerson_Id" ColumnName="YxPerson_Id" />
+                <ScalarProperty Name="ZjOrGr" ColumnName="ZjOrGr" />
                 <ScalarProperty Name="AddTime" ColumnName="AddTime" />
                 <ScalarProperty Name="Del" ColumnName="Del" />
                 <ScalarProperty Name="UserInfoID" ColumnName="UserInfoID" />
@@ -2957,6 +3051,16 @@
                 <ScalarProperty Name="Wxidcode" ColumnName="Wxidcode" />
                 <ScalarProperty Name="Wx_id" ColumnName="Wx_id" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ttexts">
+            <EntityTypeMapping TypeName="OAModel.Ttext">
+              <MappingFragment StoreEntitySet="Ttext">
+                <ScalarProperty Name="AddUser" ColumnName="AddUser" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="AddTime" ColumnName="AddTime" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -68,6 +68,8 @@ namespace CZBK.ItcastOA.IDAL
 	
 		ITLoginbakDal TLoginbakDal{get;set;}
 	
+		ITtextDal TtextDal{get;set;}
+	
 		IUserInfoDal UserInfoDal{get;set;}
 	
 		IUserInfo_CityDal UserInfo_CityDal{get;set;}

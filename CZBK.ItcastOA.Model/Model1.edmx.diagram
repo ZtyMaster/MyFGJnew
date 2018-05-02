@@ -80,6 +80,9 @@
         <AssociationConnector Association="OAModel.FK_T_AppOpen_UserInfo" />
         <EntityTypeShape EntityType="OAModel.WxUser" Width="1.5" PointX="4" PointY="37.460805257161454" />
         <AssociationConnector Association="OAModel.FK_WxUser_UserInfo" />
+        <EntityTypeShape EntityType="OAModel.Ttext" Width="1.5" PointX="4" PointY="42.224884033203125" />
+        <AssociationConnector Association="OAModel.FK_WxUser_yxperson" />
+        <AssociationConnector Association="OAModel.FK_Ttext_user" />
         
       </Diagram>
     </edmx:Diagrams>

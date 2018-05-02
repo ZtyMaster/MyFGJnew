@@ -17,6 +17,7 @@ namespace CZBK.ItcastOA.Model
         public T_YxPerson()
         {
             this.UserInfoes = new HashSet<UserInfo>();
+            this.WxUsers = new HashSet<WxUser>();
         }
     
         public long ID { get; set; }
@@ -32,5 +33,6 @@ namespace CZBK.ItcastOA.Model
     
         public virtual UserInfo UserInfo { get; set; }
         public virtual ICollection<UserInfo> UserInfoes { get; set; }
+        public virtual ICollection<WxUser> WxUsers { get; set; }
     }
 }

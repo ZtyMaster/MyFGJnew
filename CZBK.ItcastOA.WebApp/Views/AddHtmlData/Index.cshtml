@@ -18,17 +18,17 @@
     <script src="~/Scripts/MyAjaxForm.js"></script>
     <script src="~/Scripts/MyNewJS.js"></script>
     <style>
-      
         .V_s {
             max-width: 100px;
             min-width: 100px;
         }
+
         .toolbar {
             height: 30px;
             padding: 5px;
         }
 
-       html,  body, .f1_div {
+        html, body, .f1_div {
             margin: 0px;
             padding: 0px;
             height: 100%;
@@ -49,15 +49,15 @@
         a {
             color: deepskyblue;
         }
+
         .input_val {
-            max-width:100px;width:50px;
-           
+            max-width: 100px;
+            width: 50px;
         }
-      
     </style>
     <script type="text/javascript">
         var strval;
-       
+
 
         function enable() {
             $('a.easyui-linkbutton').linkbutton('enable');
@@ -88,48 +88,43 @@
             });
             $("#NewAddDiv").css("display", "none");
             $("#NewAddChuzhuDiv").css("display", "none");
-            
+
             $(".Pxx").hide()
             $(".Padd").hide()
-            
+
             // 当窗口大小发生变化时，调整DataGrid的大小
             loadData();
 
             $("#mm1 div a").click(function () {
                 var div_a = $(this).attr("id");
-                if (div_a == "ax1")
-                {
+                if (div_a == "ax1") {
                     loadData();
                 }
-                else if (div_a == "ax2")
-                {
+                else if (div_a == "ax2") {
                     loadChuZhuData();
                 }
                 else if (div_a == "ax3") {
                     LoadQiuZhu();
                 }
-               
+
             })
-          
+
             $(".OpenImageUrl").change(function () {
-                if ($(this).val() == 1)
-                {
+                if ($(this).val() == 1) {
                     $(".Pxx").show();
                     $(".Padd").show();
                 }
-                else
-                {
-                    
+                else {
+
                     $("#Image_str").val("");
                     $(".Pxx").hide();
                     $(".Padd").hide();
                 }
-                
+
             })
             $(".PaddImage").click(function () {
-               
-                if ($(this).attr("id") == "AddRef")
-                {
+
+                if ($(this).attr("id") == "AddRef") {
                     var val = $("#RSFimagestr").val();
                     var text = $("#TextRSF").val();
                     var text = text.length <= 0 ? val : text + "---" + val;
@@ -141,15 +136,15 @@
                     $("#XxChuzhu").val(text);
                     $("#ChuzhuImageIn").val("")
                 }
-              
-                
-               
+
+
+
             })
             $(".Cogi").click(function () {
                 $(".Image_str").val("");
             })
         });
-           
+
         //将序列化成json格式后日期(毫秒数)转成日期格式
         function ChangeDateFormat(cellval) {
             var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
@@ -157,8 +152,8 @@
             var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
             return date.getFullYear() + "-" + month + "-" + currentDate;
         }
-    
-        function loadData(pars) {          
+
+        function loadData(pars) {
             $('#tt').datagrid({
                 url: "/AddHtmlData/SelectMyData",
                 title: '添加二手房信息',
@@ -178,9 +173,9 @@
                 queryParams: pars,//往后台传递参数
                 columns: [[//c.UserName, c.UserPass, c.Email, c.RegTime
                     { field: 'ck', checkbox: true, align: 'left', width: 50 },
-                    { field: 'ID', title: '编号',  align: 'center', hidden: 'True' },
+                    { field: 'ID', title: '编号', align: 'center', hidden: 'True' },
                     {
-                        field: 'Image_str', title: '图片', align: 'center', 
+                        field: 'Image_str', title: '图片', align: 'center',
                         formatter: function (value, row, index) {
                             var bj = "";
                             if (value == "有")
@@ -198,24 +193,24 @@
                      { field: 'HLName', title: '信息名称', align: 'left', halign: 'center' },
                     { field: 'PersonName', title: '联系人', align: 'center' },
                     { field: 'photo', title: '联系电话', align: 'center' },
-                    { field: 'Address', title: '地址',  halign: 'center' },
-                    { field: 'FwSumMoney', title: '金额',  align: 'center' },
+                    { field: 'Address', title: '地址', halign: 'center' },
+                    { field: 'FwSumMoney', title: '金额', align: 'center' },
                       { field: 'FwMianji', title: '面积', align: 'center' },
                     { field: 'FwHuXing', title: '户型', align: 'center' },
                     { field: 'FwLoucheng', title: '楼层', align: 'center' },
                     { field: 'FwZhuangxiu', title: '装修', align: 'center' },
-                    { field: 'FwChaoxiang', title: '朝向',align: 'center' },
-                    { field: 'FwNianxian', title: '产权',  align: 'center' },
+                    { field: 'FwChaoxiang', title: '朝向', align: 'center' },
+                    { field: 'FwNianxian', title: '产权', align: 'center' },
                     {
                         field: 'Operator', title: '操作', halign: 'center',
                         formatter: function (value, row, index) {
-                           
+
                             var str = " &nbsp&nbsp<a href='javascript:SeeImage()' ids='" + row.ID +
                         "' class='l-btn' style='padding:2px 8px' >查看图片</a>";
                             str = str + " &nbsp&nbsp<a href='javascript:SeeMap()' ids='" + row.ID +
                        "' class='l-btn' style='padding:2px 8px' >地图浏览</a>";
-                     //       str = str + " &nbsp&nbsp<a href='javascript:edit()' ids='" + row.ID +
-                     //"' class='l-btn' style='padding:2px 8px' >修改</a>";
+                            //       str = str + " &nbsp&nbsp<a href='javascript:edit()' ids='" + row.ID +
+                            //"' class='l-btn' style='padding:2px 8px' >修改</a>";
                             str = str + " &nbsp&nbsp<a href='javascript:delt()' ids='" + row.ID +
                       "' class='l-btn' style='padding:2px 8px' id='deltid' >删除</a>";
                             return str;
@@ -228,9 +223,9 @@
 
                 }
             });
-            var pager = $('#tt').datagrid().datagrid('getPager');	// get the pager of datagrid       
+            var pager = $('#tt').datagrid().datagrid('getPager');	// get the pager of datagrid
             pager.pagination({
-                buttons: [ {
+                buttons: [{
                     text: '添加信息',
                     iconCls: 'icon-add',
                     handler: function () {
@@ -322,15 +317,17 @@
                                 return value;
                             }
                         },
-                         {  field: 'HLName', title: '信息名称', width: 100,  },
-                        {field: 'Pinmi', title: '平米', width: 15, align: 'center',
+                         { field: 'HLName', title: '信息名称', width: 100, },
+                        {
+                            field: 'Pinmi', title: '平米', width: 15, align: 'center',
                             formatter: function (value, row, index) {
-                                return  value==null?"": value + "㎡";
+                                return value == null ? "" : value + "㎡";
                             }
                         },
 
-                        {field: 'photo', title: '电话', width: 35, align: 'center', formatter: function (value, row, index) {
-                            var str = value == null ? "" : value.replace("document.write(unescape(", "");
+                        {
+                            field: 'photo', title: '电话', width: 35, align: 'center', formatter: function (value, row, index) {
+                                var str = value == null ? "" : value.replace("document.write(unescape(", "");
                                 str = str.replace("));", "");
                                 str = str.replace("\"", "");
                                 str = str.replace("\"", "");
@@ -340,13 +337,15 @@
                             }
                         },
                         { field: 'Address', title: '地址', width: 80, align: 'center' },
-                        {field: 'FwSumMoney', title: '金额', width: 30, align: 'center', formatter: function (value, row, index) {
-                            return value == null?"": value + "元/月";
+                        {
+                            field: 'FwSumMoney', title: '金额', width: 30, align: 'center', formatter: function (value, row, index) {
+                                return value == null ? "" : value + "元/月";
                             }
                         },
                         { field: 'Bak', title: '备注信息', width: 80 },
-                        {field: 'PersonName', title: '联系人', width: 20, align: 'center', formatter: function (value, row, index) {
-                                var str = value==null?"": value.replace("document.write(unescape(", "");
+                        {
+                            field: 'PersonName', title: '联系人', width: 20, align: 'center', formatter: function (value, row, index) {
+                                var str = value == null ? "" : value.replace("document.write(unescape(", "");
                                 str = str.replace("));", "");
                                 str = str.replace("\"", "");
                                 str = str.replace("\"", "");
@@ -365,26 +364,28 @@
                                  return str;
                              }
                          },
-                          {field: 'Gades', title: '地图', align: 'center', width: 30,
+                          {
+                              field: 'Gades', title: '地图', align: 'center', width: 30,
                               formatter: function (value, row, index) {
                                   var str = "<a href='javascript:SeeMap()' ids='" + row.ID + "' class='l-btn' style='padding:2px 8px' >地图浏览</a>";
                                   return str;
                               }
                           },
-                        {field: 'Delcz', title: '操作', align: 'center', width: 20,
-                             formatter: function (value, row, index) {
-                        var str = "<a href='javascript:DelCZ()' id='DeltCz' ids='" + row.ID + "' class='l-btn' style='padding:2px 8px' >删除</a>";
-                               return str;
+                        {
+                            field: 'Delcz', title: '操作', align: 'center', width: 20,
+                            formatter: function (value, row, index) {
+                                var str = "<a href='javascript:DelCZ()' id='DeltCz' ids='" + row.ID + "' class='l-btn' style='padding:2px 8px' >删除</a>";
+                                return str;
                             }
-                            }
+                        }
                 ]],
                 toolbar: '#tb',
-                onLoadSuccess: function () {                    
+                onLoadSuccess: function () {
                 }
             });
-            var pager = $('#tt').datagrid().datagrid('getPager');	// get the pager of datagrid       
+            var pager = $('#tt').datagrid().datagrid('getPager');	// get the pager of datagrid
             pager.pagination({
-                buttons: [ {
+                buttons: [{
                     text: '添加信息',
                     iconCls: 'icon-add',
                     handler: function () {
@@ -424,7 +425,7 @@
                                         $.messager.alert("提示", "联系电话不可为空！~");
                                         return;
                                     }
-                                    if ($("#czMoney").val().trim().length <= 0 ) {
+                                    if ($("#czMoney").val().trim().length <= 0) {
                                         $.messager.alert("提示", "金额不可为空！~");
                                         return;
                                     }
@@ -467,7 +468,8 @@
                 columns: [[//c.UserName, c.UserPass, c.Email, c.RegTime
                         { field: 'ck', checkbox: true, align: 'left', width: 50 },
                         { field: 'ID', title: '编号', hidden: 'True' },
-                        { field: 'FbTime', title: '信息发布时间', width: 50, align: 'center',
+                        {
+                            field: 'FbTime', title: '信息发布时间', width: 50, align: 'center',
                             formatter: function (value, row, index) {
                                 value = value == null ? "" : Fromart_24(value);
                                 return value;
@@ -492,10 +494,10 @@
                         { field: 'Address', title: '需求地址', width: 80, align: 'center' },
                         {
                             field: 'FwSumMoney', title: '金额', width: 30, align: 'center'
-                        },                      
+                        },
                         {
                             field: 'PersonName', title: '联系人', width: 20, align: 'center'
-                        },                     
+                        },
                           {
                               field: 'Gades', title: '地图', align: 'center', width: 30,
                               formatter: function (value, row, index) {
@@ -515,7 +517,7 @@
                 onLoadSuccess: function () {
                 }
             });
-            var pager = $('#tt').datagrid().datagrid('getPager');	// get the pager of datagrid       
+            var pager = $('#tt').datagrid().datagrid('getPager');	// get the pager of datagrid
             pager.pagination({
                 buttons: [{
                     text: '添加信息',
@@ -579,15 +581,14 @@
                 }, '-']
             });
         }
-  
-        function afterAdd(data)
-        {
+        
+        function afterAdd(data) {
             if (data.ret == "ok") {
 
                 $("#tt").datagrid("reload");
-                try{ $('#NewAddDiv').dialog('close');}
-                catch(e){
-                
+                try { $('#NewAddDiv').dialog('close'); }
+                catch (e) {
+
                 }
                 try { $('#NewAddChuzhuDiv').dialog('close'); }
                 catch (e) {
@@ -598,12 +599,12 @@
 
                 }
 
-               
+
 
             } else {
                 $.messager.alert("", data.msg, "");
             }
-            
+
         }
         function delt() {
             $.messager.confirm('删除提示', '是否删除选中的信息?', function (r) {
@@ -615,17 +616,16 @@
                         return;
                     }
                     $.post("/AddHtmlData/delData", { "IDs": rows[0].ID }, function (data) {
-                        if (data.ret == "ok")
-                        {
+                        if (data.ret == "ok") {
                             $("#tt").datagrid("reload");
                         }
                         else {
                             $.messager.alert("", data.msg, "");
                         }
                     })
-                  
+
                 }
-            });            
+            });
         }
         //删除出租信息
         function DelCZ() {
@@ -683,9 +683,8 @@
                     <a style="float:left" href="#" class="easyui-menubutton" data-options="menu:'#mm1',iconCls:'icon-search'">添加选项</a>
                     <div id="mm1" style="width:150px;">
                         <div><a id="ax1">二手房信息</a></div>
-                        <div ><a id="ax2">出租信息</a></div>
-                        <div ><a id="ax3">求租信息</a></div>
-                      
+                        <div><a id="ax2">出租信息</a></div>
+                        <div><a id="ax3">求租信息</a></div>
                     </div>
                 </div>
             </div>
@@ -694,7 +693,7 @@
 
         <div id="NewAddDiv">
             @using (Ajax.BeginForm("AddEditData", "AddHtmlData", new { }, new AjaxOptions() { HttpMethod = "post", OnSuccess = "afterAdd" }, new
-            {id ="addForm"            }))
+            { id = "addForm" }))
             {  <input type="hidden" name="ID" id="ID" />
             <table id="tabid" style="width:100%;height:100%; ">
                 <tr>
@@ -749,24 +748,24 @@
                 <tr>
                     <td>网址图片：</td>
                     <td>
-                        <select  class="OpenImageUrl">
+                        <select class="OpenImageUrl">
                             <option selected="selected" value="0">关闭</option>
                             <option value="1">开启</option>
                         </select>
                     </td>
                 </tr>
-                <tr  class="Pxx">
+                <tr class="Pxx">
                     <td>详细地址：</td>
                     <td colspan="2">
-                        <textarea name="Image_str" id="TextRSF" class="Image_str"  readonly="readonly" style="width:300px;"rows="6"></textarea>
+                        <textarea name="Image_str" id="TextRSF" class="Image_str" readonly="readonly" style="width:300px;" rows="6"></textarea>
                     </td>
                 </tr>
-                <tr  class="Padd">
+                <tr class="Padd">
                     <td>图片地址：</td>
                     <td><input id="RSFimagestr" type="text" /></td>
                     <td>
-                        <a class="easyui-linkbutton PaddImage" id="AddRef" >添加</a>
-                        <a class="easyui-linkbutton Cogi" >重置</a>
+                        <a class="easyui-linkbutton PaddImage" id="AddRef">添加</a>
+                        <a class="easyui-linkbutton Cogi">重置</a>
                     </td>
                 </tr>
             </table>
@@ -777,67 +776,68 @@
 
         <div id="NewAddChuzhuDiv">
             @using (Ajax.BeginForm("AddChuZhufrist", "AddHtmlData", new { }, new AjaxOptions() { HttpMethod = "post", OnSuccess = "afterAdd" }, new
-            {id ="addChuzhuForm"}))
+            { id = "addChuzhuForm" }))
             {  <input type="hidden" name="ID" id="ID" />
-                    <table id="tabCZid" style="width:100%;height:100%; ">
-                        <tr>
-                            <td>城市:</td>
-                            <td>
-                                <select id="" class="easyui-combobox" name="CityID">
-                                    @{foreach (T_City Items in ViewBag.City)
-                                        {
-                                            <option value="@Items.ID">@Items.City</option>
+            <table id="tabCZid" style="width:100%;height:100%; ">
+                <tr>
+                    <td>城市:</td>
+                    <td>
+                        <select id="" class="easyui-combobox" name="CityID">
+                            @{foreach (T_City Items in ViewBag.City)
+                                {
+                                    <option value="@Items.ID">@Items.City</option>
 
-                                        }
-                                    }
-                                </select>
-                            </td>
-                        </tr>
-                        <tr><td>发布时间：</td><td><input class="easyui-datetimebox" name="FbTime" id="czfbtime" /></td></tr>
-                        <tr><td>信息名称：</td><td><input name="ChuZhuName" id="csChuZhuName" /></td></tr>
-                        <tr><td>联系人：</td><td><input name="LianXiPerson" id="czLianXiPerson" /></td></tr>
-                        <tr><td>联系电话：</td><td><input name="LianXiPhoto" id="csLianXiPhoto" /></td></tr>
-                        <tr><td>地址：</td><td><input name="Addess" id="CZAddess" /></td></tr>
-                        <tr>
-                            <td>金额：</td>
-                            <td>
-                                <input type="text" onkeyup="num(this)" name="Money" id="czMoney"  />
-                            </td>
-                        </tr>
-                        <tr><td>面积：</td><td><input name="PingMi" id="czPingMi" onkeyup="num(this)" />㎡</td></tr>
-                        <tr>
-                            <td>户型：</td>
-                            <td>
-                                <input type="text"   id="" name="Tingshi" />
+                                }
+                            }
+                        </select>
+                    </td>
+                </tr>
+                <tr><td>发布时间：</td><td><input class="easyui-datetimebox" name="FbTime" id="czfbtime" /></td></tr>
+                <tr><td>信息名称：</td><td><input name="ChuZhuName" id="csChuZhuName" /></td></tr>
+                <tr><td>联系人：</td><td><input name="LianXiPerson" id="czLianXiPerson" /></td></tr>
+                <tr><td>联系电话：</td><td><input name="LianXiPhoto" id="csLianXiPhoto" /></td></tr>
+                <tr><td>地址：</td><td><input name="Addess" id="CZAddess" /></td></tr>
+                <tr>
+                    <td>金额：</td>
+                    <td>
+                        <input type="text" onkeyup="num(this)" name="Money" id="czMoney" />
+                    </td>
+                </tr>
+                <tr><td>面积：</td><td><input name="PingMi" id="czPingMi" onkeyup="num(this)" />㎡</td></tr>
+                <tr>
+                    <td>户型：</td>
+                    <td>
+                        <input type="text" id="" name="Tingshi" />
 
-                            </td>
-                        </tr>                     
-                        <tr><td>备注：</td><td><textarea name="Bak" id=""  rows="3"></textarea></td></tr>
-                        <tr> <td>网址图片：</td>
-                            <td>
-                                <select class="OpenImageUrl">
-                                    <option selected="selected" value="0">关闭</option>
-                                    <option value="1">开启</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr  class="Pxx">
-                            <td>详细地址：</td>
-                            <td colspan="2">
-                                <textarea name="Images" id="XxChuzhu" readonly="readonly" class="Image_str" style="width:300px;"
-                                          rows="6"></textarea>
-                            </td>
-                        </tr>
-                        <tr  class="Padd">
-                            <td>图片地址：</td>
-                            <td><input id="ChuzhuImageIn" type="text" /></td>
-                            <td>
-                                <a class="easyui-linkbutton PaddImage"  id="AddChuzhu"> 添 加</a>
-                                <a class="easyui-linkbutton Cogi" >重置</a>
-                            </td>
-                        </tr>
-                    </table>
-                      }
+                    </td>
+                </tr>
+                <tr><td>备注：</td><td><textarea name="Bak" id="" rows="3"></textarea></td></tr>
+                <tr>
+                    <td>网址图片：</td>
+                    <td>
+                        <select class="OpenImageUrl">
+                            <option selected="selected" value="0">关闭</option>
+                            <option value="1">开启</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="Pxx">
+                    <td>详细地址：</td>
+                    <td colspan="2">
+                        <textarea name="Images" id="XxChuzhu" readonly="readonly" class="Image_str" style="width:300px;"
+                                  rows="6"></textarea>
+                    </td>
+                </tr>
+                <tr class="Padd">
+                    <td>图片地址：</td>
+                    <td><input id="ChuzhuImageIn" type="text" /></td>
+                    <td>
+                        <a class="easyui-linkbutton PaddImage" id="AddChuzhu"> 添 加</a>
+                        <a class="easyui-linkbutton Cogi">重置</a>
+                    </td>
+                </tr>
+            </table>
+                                }
         </div>
 
         <div id="NewAddQiuzhuDiv">
@@ -869,11 +869,11 @@
                         <input type="text" onkeyup="num(this)" name="Money" id="qzMoney" />
                     </td>
                 </tr>
-                <tr><td>厅事：</td><td><input name="JuShi" id="qzJuShi"  /></td></tr>
-             
+                <tr><td>厅事：</td><td><input name="JuShi" id="qzJuShi" /></td></tr>
+
                 <tr><td>归属地：</td><td><textarea name="GuiShuDi" id="qzGuiShuDi" rows="3"></textarea></td></tr>
             </table>
-             }
+                                }
         </div>
 
         <div id="SeeImageDIV">

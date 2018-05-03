@@ -32,7 +32,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         IBLL.IT_QuyuService T_QuyuService { get; set; }
         IBLL.IT_YxPersonService T_YxPersonService { set; get; }
          
-        IBLL.IWxUserService IWxUserService { get; set; }
+        IBLL.IWxUserService WxUserService { get; set; }
 
         public ActionResult Index()
         {
@@ -398,11 +398,11 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 {
                     string uid = Request["uid"];
 
-                    var iwx = IWxUserService.LoadEntities(x => x.Wx_id == uid).FirstOrDefault();
+                    var iwx = WxUserService.LoadEntities(x => x.Wx_id == uid).FirstOrDefault();
                     if (iwx != null)
                     {
                         iwx.YxPerson_Id = personlist.ID;
-                        IWxUserService.EditEntity(iwx);
+                        WxUserService.EditEntity(iwx);
                         return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
                     }
                     else
@@ -420,6 +420,48 @@ namespace CZBK.ItcastOA.WebApp.Controllers
 
         }
 
+        #endregion
+        #region 获取绑定人纪录
+        public ActionResult BandPersonYesOrNo()
+        {
+            string uid = Request["uid"];
+            var iwx = WxUserService.LoadEntities(x => x.Wx_id == uid).FirstOrDefault();
+            if(iwx != null)
+            {
+                if(iwx.YxPerson_Id != null)
+                {
+                    return Json(new { ret = "ok", PersonName = iwx.T_YxPerson.PersonName }, JsonRequestBehavior.AllowGet);
+                }else
+                {
+                    return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
+                }
+            }else
+            {
+                return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        #endregion
+        #region 获取登录人身份（个人或中介）
+        public ActionResult PersonZJorGR()
+        {
+            string uid = Request["uid"];
+            var iwx = WxUserService.LoadEntities(x => x.Wx_id == uid).FirstOrDefault();
+            if (iwx != null)
+            {
+                if (iwx.ZjOrGr != null)
+                {
+                    return Json(new { ret = "ok", ziOrGr=iwx.ZjOrGr }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
+            }
+        }
         #endregion
 
         #region 查看图片

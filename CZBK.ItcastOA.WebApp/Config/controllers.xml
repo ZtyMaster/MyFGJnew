@@ -160,7 +160,7 @@
     <property name="T_ChuZhuInfoService" ref="T_ChuZhuInfoService" />
     <property name="T_QuyuService" ref="T_QuyuService" />
     <property name="T_YxPersonService" ref="T_YxPersonService" />
-    <property name="IWxUserService" ref="IWxUserService" />
+    <property name="WxUserService" ref="WxUserService" />
     
 
   </object>

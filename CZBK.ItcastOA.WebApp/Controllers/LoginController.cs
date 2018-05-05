@@ -212,6 +212,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 WXXInfo wxx = new WXXInfo();
                 wxx.Username = temp.UserInfo.UName;
                 wxx.Password = temp.UserInfo.UPwd;
+                wxx.City = temp.UserInfo.T_City.City;
                 return Json(new { ret = "ok", rows = wxx }, JsonRequestBehavior.AllowGet);
             }
             else
@@ -244,5 +245,6 @@ namespace CZBK.ItcastOA.WebApp.Controllers
     {
         public string Username { get; set; }
         public string Password { get; set; }
+        public string City { get; set; }
     }
 }

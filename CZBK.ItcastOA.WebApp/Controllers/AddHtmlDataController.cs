@@ -124,6 +124,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 tfhd.HuXingID = AllClass.GetHuxing(tfhd.FwHuXing);
                 tfhd.AddUserTiem = MvcApplication.GetT_time();
                 tfhd.HLhref = "";
+                tfhd.delflag = 1;
                 tfhd.Image_str = tfhd.Image_str!=null?tfhd.Image_str.Trim().Length > 0 ? "有---" + tfhd.Image_str : tfhd.Image_str : tfhd.Image_str;
 
                 var DisctD = T_FGJHtmlDataService.LoadEntities(x => x.photo == tfhd.photo && x.HLName == tfhd.HLName).FirstOrDefault();
@@ -192,6 +193,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 Chuzhu.UserID = LoginUser.ID;
                 Chuzhu.LaiYuan = "NewAdd";
                 Chuzhu.AdduserTime = MvcApplication.GetT_time();
+                Chuzhu.Del = 1;
                 T_ChuZhuInfoService.AddEntity(Chuzhu);
                 return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
             }
@@ -266,6 +268,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             {
                 tqz.User_ID = LoginUser.ID;
                 tqz.AddUserTime = MvcApplication.GetT_time();
+                
                 T_QiuZhuQiuGouService.AddEntity(tqz);
                 return Json(new { ret = "ok", JsonRequestBehavior.AllowGet });
             }

@@ -393,7 +393,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             else
             {
                 string Person = Request["Person"].Trim();
-                var personlist = T_YxPersonService.LoadEntities(x => x.PersonName == Person).FirstOrDefault();
+                var personlist = T_YxPersonService.LoadEntities(x => x.PersonName == Person&&x.DEL==0).FirstOrDefault();
                 if (personlist != null)
                 {
                     string uid = Request["uid"];

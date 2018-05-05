@@ -76,7 +76,95 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                            text=a.QY_connet
                        };
             return Json(Quyu , JsonRequestBehavior.AllowGet);
-        }      
+        }
+        #region 获取未审核信息
+        public ActionResult SltShenHeFaBu() {
+            int pageIndex = Request["page"] != null ? int.Parse(Request["page"]) : 1;
+            int pageSize = Request["rows"] != null ? int.Parse(Request["rows"]) : 35;
+            var totalCount = int.MaxValue;
+            //审核中  1   审核失败 0    审核通过 NULL   后台添加信息 2
+            var val = T_FGJHtmlDataService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.delflag != null, x => x.FbTime, false);
+            if (Request["dff"] !=null)
+            {
+                if ( Request["dff"].Length<=0) {
+                    val = T_FGJHtmlDataService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.delflag != null, x => x.FbTime, false);
+                }
+                else if (Convert.ToInt32(Request["dff"]) == 0)
+                {
+                    val = T_FGJHtmlDataService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.delflag == 0, x => x.FbTime, false);
+                }
+                else if (Convert.ToInt32(Request["dff"]) == 1)
+                {
+                    val = T_FGJHtmlDataService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.delflag == 1, x => x.FbTime, false);
+                }
+                else if (Convert.ToInt32(Request["dff"]) == 2)
+                {
+                    val = T_FGJHtmlDataService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.Laiyuan == "AddDAT", x => x.FbTime, false);
+                }
+                else if (Convert.ToInt32(Request["dff"]) == 3)
+                {
+                    val = T_FGJHtmlDataService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.Laiyuan == "AddDAT" && x.delflag == null, x => x.FbTime, false);
+                }
+                else {
+                    val = T_FGJHtmlDataService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.delflag != null, x => x.FbTime, false);
+                }
+                           
+            }
+       
+        
+           
+
+            var temp = fromartFGJ(val, T_SeeClickPhotoService.LoadEntities(x => x.UserID == LoginUser.ID).DefaultIfEmpty(),true);
+            return Json(new { rows = temp, total = totalCount }, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+        
+        #region 审核操作
+        //删除操作  审核通过  审核失败
+        public ActionResult EditShenHe() {
+            int Shedit = Convert.ToInt32(Request["dl"]);
+            long id = Convert.ToInt64(Request["id"]);
+            var fd = T_FGJHtmlDataService.LoadEntities(x => x.ID == id).FirstOrDefault();
+            if (Shedit <=1)
+            {
+                if (fd != null) {
+
+                    if (Shedit == 0)
+                    {
+                        fd.delflag = null;
+                    }
+                    else {
+                        fd.delflag = 0;
+                    }
+                   
+                    if (T_FGJHtmlDataService.EditEntity(fd))
+                    {
+                        return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new { ret = "执行审核数据时，出现错误！" }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+            }
+            else
+            {              
+                if (fd != null) {
+                    if (T_FGJHtmlDataService.DeleteEntity(fd))
+                    {
+                        return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+                    }
+                    else {
+                        return Json(new { ret = "执行删除数据时，出现错误！" }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+            }
+            return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+
+        }
+
+            
+        #endregion
         #region 获取网站信息
         public ActionResult GetHref()
         {
@@ -258,6 +346,10 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             #endregion
 
             var UscrClick = T_SeeClickPhotoService.LoadEntities(x=>x.UserID==LoginUser.ID).DefaultIfEmpty();
+            var temp = fromartFGJ(actioninfolist,UscrClick,false);
+            return temp;
+        }
+        private object fromartFGJ(IQueryable<T_FGJHtmlData> actioninfolist,IQueryable<T_SeeClickPhoto> UscrClick,bool bl) {
             var temp = from a in actioninfolist
                        select new
                        {
@@ -267,7 +359,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                            FbTime = a.FbTime,
                            PersonName = a.PersonName,
                            Address = a.Address,
-                           photo =  UscrClick.Where(x=>x.T_FgjID==a.ID).FirstOrDefault()!=null ? a.photo : string.Empty ,
+                           photo =bl?a.photo: UscrClick.Where(x => x.T_FgjID == a.ID).FirstOrDefault() != null ? a.photo : string.Empty,
                            Laiyuan = a.Laiyuan,
                            FwSumMoney = a.FwSumMoney,
                            FwHuXing = a.FwHuXing,
@@ -276,7 +368,10 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                            FwChaoxiang = a.FwChaoxiang,
                            FwNianxian = a.FwNianxian,
                            FwMianji = a.FwMianji,
-                           Fmimage = a.Image_str
+                           Fmimage = a.Image_str,
+                           fbuser=a.UserInfo.UName,
+                           del=a.delflag
+                                                      
                        };
             return temp;
         }

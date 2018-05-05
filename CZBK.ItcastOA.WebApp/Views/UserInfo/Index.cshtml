@@ -111,6 +111,9 @@
             $("#SetGonggao").click(function () {
                 SetGonggao()
             })
+            $("#FBsh").click(function () {
+                fbsh_void();
+            })
             $("#Bjlb").click(function () {
                 var pars = {
                     Mxitems: true
@@ -258,6 +261,95 @@
                 }
                 ]
             });
+        }
+        //发布审核
+        function fbsh_void(pars) {
+            $(".datagrid-toolbar").hide();
+            $('#tt').datagrid({
+                url: '/HrefInfo/SltShenHeFaBu',
+                title: '出售二手房信息',
+                width: $(document.body).width(),
+                height: $(document).height(),
+                fitColumns: true, //列自适应
+                nowrap: true,//则把数据显示在一行里。
+                idField: 'ID',//主键列的列明
+                fit: true,
+                loadMsg: '正在加载权限的信息...',
+                pagination: true,//是否有分页
+                singleSelect: true,//是否单行选择
+                pageSize: 35,//页大小，一页多少条数据
+                pageNumber: 1,//当前页，默认的
+                pageList: [15, 25, 35],
+                pagePosition: "bottom",//定义分页栏的位置。
+                queryParams: pars,//往后台传递参数
+                columns: [[//c.UserName, c.UserPass, c.Email, c.RegTime
+                    {
+                        field: 'Image_str', title: '图片', align: 'center', width: 30,
+                        formatter: function (value, row, index) {
+                            var bj = "";
+                            if (value == "有")
+                            { bj = "<img src='/Content/Images/nf/32px.png' height='25'  />"; }
+                            return bj;
+                        }
+                    },
+                    {
+                        field: 'FbTime', title: '发布时间', align: 'center', width: 80,
+                        formatter: function (value, row, index) {
+                            return Fromart_24(value);
+                        }
+
+                    },
+                     { field: 'HLName', title: '信息名称', width: 200, align: 'left', halign: 'center' },
+                    { field: 'PersonName', title: '联系人', align: 'center' },
+                    { field: 'photo', title: '联系电话', align: 'center' },
+                    {
+                        field: 'Address', title: '地址', width: 100, halign: 'center'
+                    },
+                    { field: 'FwSumMoney', title: '金额', width: 80, align: 'center' },
+                      { field: 'FwMianji', title: '面积', width: 60, align: 'center' },
+                    { field: 'FwHuXing', title: '户型', width: 60, align: 'center' },
+                    { field: 'FwLoucheng', title: '楼层', width: 30, align: 'center' },
+                    { field: 'FwZhuangxiu', title: '装修', width: 30, align: 'center' },
+                    { field: 'FwChaoxiang', title: '朝向', width: 30, align: 'center' },
+                    { field: 'FwNianxian', title: '产权', width: 30, align: 'center' },
+                     { field: 'fbuser', title: '申请人', width: 30, align: 'center' },
+                     { field: 'del', title: '审核状态', width: 30, align: 'center' },
+                    {
+                        field: 'Operator', title: '操作', halign: 'center',
+                        formatter: function (value, row, index) {
+                            var str = "&nbsp&nbsp<a href='javascript: shsyl(0)' ids='" + row.ID +
+                            "'class='l-btn' style='padding:2px 6px' >通过审核</a>";
+                            str = str + " &nbsp&nbsp<a href='javascript:shsyl(1)' ids='" + row.id +
+                            "'class='l-btn' style='padding:2px 6px' >审核失败</a>";
+                            str = str + " &nbsp&nbsp<a href='javascript:shsyl(2)' ids='" + row.id +
+                            "'class='l-btn' style='padding:2px 6px' >删除</a>";
+                            return str;
+                        }
+                    }
+
+                ]],
+                toolbar: '#tb',
+                onLoadSuccess: function () {
+
+                }
+            });
+        }
+        function shsyl(pars,id) {
+            var rows = $('#tt').datagrid('getSelections');
+            if (rows.length != 1) {
+                //alert("请选择要修改的商品！");
+                $.messager.alert("提醒", "请选择要编辑的1条记录!", "error");
+                return;
+            }
+            $.post("/Hrefinfo/EditShenHe", { "dl": pars, "id": rows[0].ID }, function (sdata) {
+                
+                if (sdata.ret == "ok") {
+                    $("#tt").datagrid("reload");
+                } else {
+                    $.messager.alert("提醒", sdata.ret, "error");
+                }
+            });
+            
         }
         //获取微信账号
         function MinApp(pars) {
@@ -1192,6 +1284,18 @@
             });
           
         }
+        //审核信息跳转
+        function shtz(p) {
+            alert(p)
+            if (p == 99) {
+                pars = {dff:""}
+                fbsh_void(pars)
+            } else {
+                var pars = { dff: p };
+                fbsh_void(pars)
+            }
+            
+        }
     </script>
 
 </head>
@@ -1201,6 +1305,7 @@
         <a href="#" class="easyui-linkbutton" data-options="toggle:true,group:'g1'" id="Ybj">业务员管理</a>
         <a href="#" class="easyui-linkbutton" data-options="toggle:true,group:'g1'" id="MinApp">微信账号绑定</a>
         <a href="#" class="easyui-linkbutton" data-options="toggle:true,group:'g1'" id="SetGonggao">发布公告</a>
+        <a href="#" class="easyui-linkbutton" data-options="toggle:true,group:'g1'" id="FBsh">发布审核</a>
         <a href="#" class="easyui-linkbutton" data-options="toggle:true,group:'g1'" id="loginuser">历史登陆信息</a>
     </div>
     <div data-options="region:'center',title:'数据报表'" id="dgdiv">        
@@ -1395,6 +1500,23 @@
                             }
     </div>
 
+
+
+    <div id="tb" style="padding:5px;height:auto">
+        <div style="margin-bottom:1px;" id="XUANX">
+            <div class="easyui-panel" style="padding:5px;">
+                <a style="float:left" href="#" class="easyui-menubutton" data-options="menu:'#mm1',iconCls:'icon-search'">选项</a>
+                <div id="mm1" style="width:150px;">
+                    <div><a id="ax1" href='javascript:shtz(1)'>审核申请中</a></div>
+                    <div><a id="ax2" href='javascript:shtz(3)'>已经审核</a></div>
+                    <div><a id="ax2" href='javascript:shtz(0)'>审核失败</a></div>
+                    <div><a id="ax3" href='javascript:shtz(2)'>线下信息</a></div>
+                    <div><a id="ax3" href='javascript:shtz(99)'>正常显示</a></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
     
 </body>
 </html>

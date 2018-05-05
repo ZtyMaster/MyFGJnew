@@ -545,7 +545,6 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             if (IsJieC)
             {
                 iwu.UserInfoID = null;
-
                
             }
             else {

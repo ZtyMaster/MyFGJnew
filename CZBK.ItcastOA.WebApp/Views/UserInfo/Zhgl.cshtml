@@ -64,6 +64,7 @@
             $("#editDiv").css("display", "none");
             $("#setRoleDiv").css("display", "none");
             $("#SetUserActionDIV").css("display", "none");
+            $("#editpass").window("close");
             $('#cc').layout();
             setHeight();
         });
@@ -102,7 +103,17 @@
 					    }
 					}
                 ]],
-                toolbar: [ {
+                toolbar: [
+
+                 {
+                     id: 'Editmatr',
+                     text: '修改主号密码',
+                     iconCls: 'icon-edit',
+                     handler: function () {
+                         eidtpassdemo();
+                     }
+                 },
+                    {
                     id: 'btnAdd',
                     text: '添加',
                     iconCls: 'icon-add',
@@ -123,7 +134,9 @@
             });
           
         }
-     
+        function eidtpassdemo() {
+            $("#editpass").window("open");
+        }
         //为用户分配完角色以后调用该方法
         function setuserroleafter(data) {
             if (data == "OK") {
@@ -250,6 +263,15 @@
                 $.messager.alert("提示", "添加失败", "error");
             }
         }
+        //通用返回方法
+        function aftAdd(data) {
+            if (data == "ok") {
+                $("#editpass").window("close");
+            }
+            else {
+                $.messager.alert("提示", data, "error");
+            }
+        }
         //删除用户数据
         function deleteInfo() {
             var rows = $('#tt').datagrid('getSelections');
@@ -297,6 +319,22 @@
             c.layout('resize', {
                 height: (c.height() + newHeight - oldHeight)
             });
+        }
+
+        function editPassVoid() {
+
+            var OldPass=$("#PldPass").val();
+            var NewPass=$("#NewPass").val();
+            var ditPass = $("#ditPass").val();
+            if (OldPass.trim().length <= 0 || NewPass.trim().length <= 0 || NewPass.trim().length <= 0) {
+                $.messager.alert("提示", "密码不可为空！", "error")
+                return;
+            }
+            if (NewPass != ditPass) {
+                $.messager.alert("提示", "两次密码不同，请核对信息！", "error")
+                return;
+            }
+            $("#editPassFrom").submit();
         }
     </script>
 
@@ -350,7 +388,25 @@
                 }
             </div>
 
-
+    <div id="editpass" class="easyui-window" title="修改主号密码" data-options="iconCls:'icon-save'" style="width:300px;height:200px;padding:5px;">
+        <div class="easyui-layout" data-options="fit:true">
+           
+            <div data-options="region:'center'" style="padding:10px;">
+                @using (Ajax.BeginForm("EditMTRpass", "UserInfo", new { }, new AjaxOptions() { HttpMethod = "post", OnSuccess = "aftAdd" }, new { id = "editPassFrom" }))
+                {
+                    <table>
+                        <tr><td>原始密码</td><td><input name="PldPass" id="PldPass" type="text" /></td></tr>
+                        <tr><td>新密码</td><td><input name="NewPass" id="NewPass"  type="password" /></td></tr>
+                        <tr><td>重复密码</td><td><input name="ditPass"  id="ditPass" type="password" /></td></tr>
+                    </table>
+                }
+            </div>
+            <div data-options="region:'south',border:false" style="text-align:right;padding:5px 0 0;">
+                <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" href="javascript:void(0)" onclick="javascript:editPassVoid()" style="width:80px">Ok</a>
+                @*<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" href="javascript:void(0)" onclick="javascript:alert('cancel')" style="width:80px">Cancel</a>*@
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

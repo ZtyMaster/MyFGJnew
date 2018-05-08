@@ -706,5 +706,29 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             }
         }
         #endregion
+
+        //修改主号密码
+        public ActionResult EditMTRpass() {
+            var OldPass = Request["PldPass"];
+            var NewPass = Request["NewPass"];
+            if (AddMD5.GaddMD5(OldPass) == LoginUser.UPwd)
+            {
+                var ThisU = UserInfoService.LoadEntities(x => x.ID == LoginUser.ID).FirstOrDefault();
+                ThisU.UPwd = AddMD5.GaddMD5(NewPass);
+                if (UserInfoService.EditEntity(ThisU))
+                {
+                    return Json("ok", JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json("修改密码时出现错误！", JsonRequestBehavior.AllowGet);
+                }
+                
+            }
+            else {
+                return Json("原始密码错误！", JsonRequestBehavior.AllowGet);
+            }
+           
+        }
     }
 }

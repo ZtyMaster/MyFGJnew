@@ -18,6 +18,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         IBLL.IUserInfoService UserInfoService { get; set; }
         IBLL.IGongGaoService GongGaoService { get; set; }
         IBLL.IWxUserService WxUserService { get; set; }
+        IBLL.ITLoginbakService TLoginbakService { get; set; }
         public ActionResult Index()
         {
             if (Request["reload"] == null)
@@ -99,7 +100,14 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                         Response.Cookies.Add(cookie2);
                     }
 
-                   return Content("ok:登录成功!!:"+sessionId);
+                    if (IsNotVali != null) {
+                        TLoginbak tlk = new TLoginbak();
+                        tlk.LGUserID = userInfo.ID;
+                        tlk.intime = DateTime.Now;
+                        tlk.LGip = HttpContext.Request.UserHostAddress;
+                        TLoginbakService.AddEntity(tlk);
+                    }
+                   return Content("ok:登录成功!!:"+sessionId+":"+userInfo.ID);
                }
             }
            else

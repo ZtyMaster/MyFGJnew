@@ -18,6 +18,8 @@
     <property name="UserInfoService" ref="UserInfoService" />
     <property name="GongGaoService" ref="GongGaoService" />
     <property name="WxUserService" ref="WxUserService" />
+    <property name="TLoginbakService" ref="TLoginbakService" />
+    
   </object>
 
 
@@ -139,6 +141,10 @@
     <property name="ScrherSAVEService" ref="ScrherSAVEService" />
     <property name="T_FGJHtmlDataService" ref="T_FGJHtmlDataService" />
     <property name="GongGaoService" ref="GongGaoService" />
+  </object>
+  <object type="CZBK.ItcastOA.WebApp.Controllers.TestController, CZBK.ItcastOA.WebApp" singleton="false" >
+    <property name="TtextService" ref="TtextService" />
+    
   </object>
 
   <object type="CZBK.ItcastOA.WebApp.Controllers.WXXHrefInfoController, CZBK.ItcastOA.WebApp" singleton="false" >

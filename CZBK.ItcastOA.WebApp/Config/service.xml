@@ -59,4 +59,7 @@
   </object>
   <object type="CZBK.ItcastOA.BLL.WxUserService, CZBK.ItcastOA.BLL" singleton="false" name="WxUserService" >
   </object>
+  <object type="CZBK.ItcastOA.BLL.TtextService, CZBK.ItcastOA.BLL" singleton="false" name="TtextService" >
+  </object>
+  
 </objects>

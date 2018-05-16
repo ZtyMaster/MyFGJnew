@@ -481,6 +481,28 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             }
         }
         #endregion
+        #region 检查登陆Sessioid
+        public ActionResult JianChaSessionID() {
+            string Sessionid = Request["sessionId"];
+            long ID = Convert.ToInt64(Request["Uid"]);
+            var Uis= UserInfoService.LoadEntities(x => x.ID==ID).FirstOrDefault();
+            if (Uis != null)
+            {
+                if (Uis.Login_now == Sessionid)
+                {
+                    return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else {
+                return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+            }
+            
+        }
+        #endregion
     }
     public class KFinfo
     {

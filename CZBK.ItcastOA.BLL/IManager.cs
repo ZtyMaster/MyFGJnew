@@ -243,6 +243,14 @@ namespace CZBK.ItcastOA.BLL
         }
     }   
 	
+	public partial class TtextImageService :BaseService<TtextImage>,ITtextImageService
+    {
+        public override void SetCurretnDal()
+        {
+            CurrentDal = this.GetCurrentDbSession.TtextImageDal;
+        }
+    }   
+	
 	public partial class UserInfoService :BaseService<UserInfo>,IUserInfoService
     {
         public override void SetCurretnDal()

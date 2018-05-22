@@ -105,6 +105,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                         tlk.LGUserID = userInfo.ID;
                         tlk.intime = DateTime.Now;
                         tlk.LGip = HttpContext.Request.UserHostAddress;
+                        tlk.LGbak = "wxload";
                         TLoginbakService.AddEntity(tlk);
                     }
                    return Content("ok:登录成功!!:"+sessionId+":"+userInfo.ID);

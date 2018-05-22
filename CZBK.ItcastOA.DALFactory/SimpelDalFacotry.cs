@@ -393,6 +393,19 @@ namespace CZBK.ItcastOA.DALFactory
             return obj as ITtextDal;
         }
 		
+	    public static ITtextImageDal CreateTtextImageDal()
+        {
+
+            string classFulleName = ConfigurationManager.AppSettings["NameSpace"] + ".TtextImageDal";
+
+
+            //object obj = Assembly.Load(ConfigurationManager.AppSettings["DalAssembly"]).CreateInstance(classFulleName, true);
+            var obj  = CreateInstance(ConfigurationManager.AppSettings["DalAssemblyPath"], classFulleName);
+
+
+            return obj as ITtextImageDal;
+        }
+		
 	    public static IUserInfoDal CreateUserInfoDal()
         {
 

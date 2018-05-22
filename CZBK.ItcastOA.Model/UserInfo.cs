@@ -78,21 +78,22 @@ namespace CZBK.ItcastOA.Model
         public virtual ICollection<T_UserClick> T_UserClick { get; set; }
         [JsonIgnore]
         public virtual ICollection<T_UserSave> T_UserSave { get; set; }
-        [JsonIgnore]
-        public virtual T_City T_City { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<T_SaveHtmlData> T_SaveHtmlData1 { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<T_SaveHtmlData> T_SaveHtmlData11 { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<T_YxPerson> T_YxPerson { get; set; }
-        [JsonIgnore]
-        public virtual T_YxPerson T_YxPerson1 { get; set; }
+            [JsonIgnore]
+            public virtual T_City T_City { get; set; }
+            [JsonIgnore]
+            public virtual ICollection<T_SaveHtmlData> T_SaveHtmlData1 { get; set; }
+            [JsonIgnore]
+            public virtual ICollection<T_SaveHtmlData> T_SaveHtmlData11 { get; set; }
+            [JsonIgnore]
+            public virtual ICollection<T_YxPerson> T_YxPerson { get; set; }
+            [JsonIgnore]
+            public virtual T_YxPerson T_YxPerson1 { get; set; }
         [JsonIgnore]
         public virtual ICollection<T_FGJHtmlData> T_FGJHtmlData { get; set; }
         [JsonIgnore]
         public virtual ICollection<T_ZhuaiJiaBak> T_ZhuaiJiaBak { get; set; }
         [JsonIgnore]
+       
         public virtual ICollection<T_ChuZhuInfo> T_ChuZhuInfo { get; set; }
         [JsonIgnore]
         public virtual ICollection<T_QiuZhuQiuGou> T_QiuZhuQiuGou { get; set; }

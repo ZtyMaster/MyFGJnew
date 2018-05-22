@@ -144,6 +144,7 @@
   </object>
   <object type="CZBK.ItcastOA.WebApp.Controllers.TestController, CZBK.ItcastOA.WebApp" singleton="false" >
     <property name="TtextService" ref="TtextService" />
+    <property name="TtextImageService" ref="TtextImageService" />
     
   </object>
 

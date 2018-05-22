@@ -156,6 +156,11 @@ namespace CZBK.ItcastOA.DAL
 
     }
 		
+	public partial class TtextImageDal :BaseDal<TtextImage>,ITtextImageDal
+    {
+
+    }
+		
 	public partial class UserInfoDal :BaseDal<UserInfo>,IUserInfoDal
     {
 

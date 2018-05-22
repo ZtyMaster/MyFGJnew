@@ -450,6 +450,21 @@ namespace CZBK.ItcastOA.DALFactory
             set { _TtextDal = value; }
         }
 	
+		private ITtextImageDal _TtextImageDal;
+        public ITtextImageDal TtextImageDal
+        {
+            get
+            {
+                if(_TtextImageDal == null)
+                {
+                   // _TtextImageDal = new TtextImageDal();
+				    _TtextImageDal =AbstractFactory.CreateTtextImageDal();
+                }
+                return _TtextImageDal;
+            }
+            set { _TtextImageDal = value; }
+        }
+	
 		private IUserInfoDal _UserInfoDal;
         public IUserInfoDal UserInfoDal
         {

@@ -70,6 +70,8 @@ namespace CZBK.ItcastOA.IDAL
 	
 		ITtextDal TtextDal{get;set;}
 	
+		ITtextImageDal TtextImageDal{get;set;}
+	
 		IUserInfoDal UserInfoDal{get;set;}
 	
 		IUserInfo_CityDal UserInfo_CityDal{get;set;}

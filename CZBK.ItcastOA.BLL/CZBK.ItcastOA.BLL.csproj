@@ -48,6 +48,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleInfoService.cs" />
+    <Compile Include="TtextService.cs" />
     <Compile Include="T_ChuZhuInfoService.cs" />
     <Compile Include="T_FGJHtmlDataService.cs" />
     <Compile Include="T_QiuZhuQiuGouService.cs" />

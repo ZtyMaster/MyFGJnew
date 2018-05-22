@@ -87,10 +87,30 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                            FwColors = b.T_BiaoJiInfo.Colors,
                            Fwpingmi=a.Pingmi_int,
                            FwPingmiMoney=a.Money_int,
-                           Fmimage=a.Image_str
+                           Fmimage=a.Image_str,
                        };
 
             return Json(new { rows = temp, total = userInfoParam.TotalCount }, JsonRequestBehavior.AllowGet);
+        }
+
+        //删除保存的信息
+        public ActionResult DelSaveHtml() {
+            long id = Convert.ToInt64(Request["ids"]);
+            var temp= T_SaveHtmlDataService.LoadEntities(x => x.ID == id).FirstOrDefault();
+            if (temp != null)
+            {
+                if (T_SaveHtmlDataService.DeleteEntity(temp))
+                {
+                    return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { ret = "删除失败，执行删除操作时出现错误！" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else {
+                return Json(new { ret = "删除失败，未找到要删除的数据！" }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public   static void SetInfoParam(UserInfoParam userInfoParam, IBLL.IT_ItemsService T_ItemsService)

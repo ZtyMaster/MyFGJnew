@@ -107,9 +107,27 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                             Laiyuan= a.LaiYuan,
                             IsQZ ="CZ",
                             url=a.ChuZhuHref,
+                            
                         };
 
             return Json(new {rows= Rtemo, total=uip.TotalCount },JsonRequestBehavior.AllowGet);
+        }
+        //删除已阅求租
+        public ActionResult DelSeeqz() {
+            long id = Convert.ToInt64(Request["ids"]);
+            var temp= SeeQzCzService.LoadEntities(x => x.ChuZhuID == id && x.UserID == LoginUser.ID).FirstOrDefault();
+            if (temp != null) {
+                if (SeeQzCzService.DeleteEntity(temp))
+                {
+                    return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+                }
+                else {
+                    return Json(new { ret = "执行删除操作时出现错误！" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else {
+                return Json(new { ret="未找到要删除的信息！" }, JsonRequestBehavior.AllowGet);
+            }
         }
         #endregion
         #region 查看图片

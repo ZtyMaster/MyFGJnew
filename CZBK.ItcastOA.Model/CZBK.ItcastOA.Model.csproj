@@ -94,6 +94,7 @@
     </Compile>
     <Compile Include="SearchParam\BaseParam.cs" />
     <Compile Include="SearchParam\seach.cs" />
+    <Compile Include="SearchParam\Showimage.cs" />
     <Compile Include="SearchParam\UserInfoParam.cs" />
     <Compile Include="SeeQzCz.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -102,6 +103,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Ttext.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TtextImage.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="T_AppOpen.cs">

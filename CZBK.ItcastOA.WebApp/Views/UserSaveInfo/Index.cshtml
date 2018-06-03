@@ -370,14 +370,14 @@
                         field: 'editdata', title: '修改', halign: 'center',
                         formatter: function (value, row, index) {
                             var str =  " &nbsp<a href='javascript:editData()' class='l-btn' style='padding:2px 5px' >修改</a>";
-                            return str;
+                            return (row.UserID == row.LoginID ? str : "<b style='color:red'>不可修改</b>");
                         }
                     },
                    {
                        field: 'Zhuijia', title: '追加', halign: 'center',
                        formatter: function (value, row, index) {
                            var str = value >= 6 ? "" :  "&nbsp&nbsp<a href='javascript:ZaddImg()'  class='l-btn' style='padding:2px 5px' >追加图片</a>";
-                           return str;
+                           return (row.UserID == row.LoginID ? str : "<b style='color:red'>归属人：" + row.UserName + "</b>");
                        }
                    }
                 ]],

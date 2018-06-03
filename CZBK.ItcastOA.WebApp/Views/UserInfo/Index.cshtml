@@ -101,7 +101,8 @@
                 LoadYYY()
             });
             $("#loginuser").click(function () {
-                loadloginuser()
+                var pars = {"isbool":true};
+                loadloginuser(pars)
             });
             //微信账号绑定
             $("#MinApp").click(function () {
@@ -207,10 +208,26 @@
                       },
 
                 ]],
-                toolbar: []
-               
+                toolbar: [{
+                    id: 'addls1',
+                    text: 'PC登陆',
+                    iconCls: 'icon-add',
+                    handler: function () {
+                        var pars = { "isbool": true };
+                        loadloginuser(pars)
+                    }
+                }, {
+                    id: 'addls2',
+                    text: '微信登陆',
+                    iconCls: 'icon-add',
+                    handler: function () {
+                        var pars = { "isbool": false };
+                        loadloginuser(pars)
+                    }
+                }]
             });
         }
+      
         //获取发布公告
         function SetGonggao(pars) {
             $('#tt').datagrid('loadData', { total: 0, rows: [] });
@@ -1515,8 +1532,14 @@
                 </div>
             </div>
         </div>
-
     </div>
+
+    <!--<div id="HistoryLogsDiv" style="padding:5px;height:auto;" >
+        <div style="margin-bottom:5px;">
+            <a href="#" class="easyui-linkbutton" id="ss1" onclick="ss()" iconCls="icon-add" plain="true">添加1</a>
+            <a href="#" class="easyui-linkbutton" id="ss2" onclick="ss()" iconCls="icon-add" plain="true">添加2</a>
+        </div>
+    </div>-->
     
 </body>
 </html>

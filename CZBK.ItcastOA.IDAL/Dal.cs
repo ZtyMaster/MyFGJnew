@@ -155,6 +155,11 @@ namespace CZBK.ItcastOA.IDAL
       
     }
 	
+	public partial interface ITtextImageDal :IBaseDal<TtextImage>
+    {
+      
+    }
+	
 	public partial interface IUserInfoDal :IBaseDal<UserInfo>
     {
       

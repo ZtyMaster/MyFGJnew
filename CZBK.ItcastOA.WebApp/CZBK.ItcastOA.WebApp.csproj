@@ -1212,6 +1212,7 @@
     <Content Include="Views\HomeTip\Index.cshtml" />
     <Content Include="Scripts\kindeditor-4.1.10\asp.net\file_manager_json.ashx" />
     <Content Include="Scripts\kindeditor-4.1.10\asp.net\upload_json.ashx" />
+    <Content Include="Views\Test\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

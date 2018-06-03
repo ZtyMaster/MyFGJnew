@@ -33,7 +33,23 @@ namespace CZBK.ItcastOA.BLL
             }
 
             //根据保存ID查询所有属于该人员的数据
-            var savedata = ActionInfoList.Select(x => x.T_FGJHtmlData).Where(x=>x.delflag==null);
+            var savedata = ActionInfoList.Select(x => x.T_FGJHtmlData).Where(x => x.delflag == null);
+            if (userInfoSearchParam.Isee)
+            {
+                var userinfo = this.GetCurrentDbSession.UserInfoDal.LoadEntities(x => x.MasterID == userInfoSearchParam.MasterID).DefaultIfEmpty();
+                var mms = userinfo.Select(x=>x.T_SaveHtmlData.Where(z=>z.GongGong== Delflag).Select(m=> m.T_FGJHtmlData)).ToList();
+                List<T_FGJHtmlData> isiqf = new List<T_FGJHtmlData>();  
+                foreach (var m in mms) {
+                    foreach (var sm in m) {
+                        isiqf.Add(sm);
+                    }
+                }
+
+                savedata = isiqf.AsQueryable<T_FGJHtmlData>();
+
+            }
+           
+          
            
             var selectdata = this.GetCurrentDbSession.T_FGJHtmlDataDal.LoadEntities(c => c.CityID == userInfoSearchParam.C_id&&c.delflag==null);
             

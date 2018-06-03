@@ -12,19 +12,12 @@ namespace CZBK.ItcastOA.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Ttext
+    public partial class TtextImage
     {
-        public Ttext()
-        {
-            this.TtextImages = new HashSet<TtextImage>();
-        }
+        public long ID { get; set; }
+        public long TextID { get; set; }
+        public string ImageStr { get; set; }
     
-        public long Id { get; set; }
-        public System.DateTime AddTime { get; set; }
-        public string Text { get; set; }
-        public Nullable<int> AddUser { get; set; }
-    
-        public virtual UserInfo UserInfo { get; set; }
-        public virtual ICollection<TtextImage> TtextImages { get; set; }
+        public virtual Ttext Ttext { get; set; }
     }
 }

@@ -47,6 +47,7 @@
       <DependentUpon>IManager.tt</DependentUpon>
     </Compile>
     <Compile Include="IRoleInfoService.cs" />
+    <Compile Include="ITtextService.cs" />
     <Compile Include="IT_ChuZhuInfoService.cs" />
     <Compile Include="IT_QiuZhuQiuGouService.cs" />
     <Compile Include="IT_SaveHtmlDataService.cs" />

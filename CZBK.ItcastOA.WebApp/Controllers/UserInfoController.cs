@@ -50,6 +50,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         #region 企业用户账号管理
         public ActionResult Zhgl()
         {
+          
            return View();
         }
         #region 创建小号
@@ -432,7 +433,8 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             int pageIndex = Request["page"] != null ? int.Parse(Request["page"]) : 1;
             int pageSize = Request["rows"] != null ? int.Parse(Request["rows"]) : 5;
             int totalCount = 0;
-            var userInfoList = TLoginbakService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.del==null, x => x.intime, false);
+            bool bl = Convert.ToBoolean(Request["isbool"]);
+            var userInfoList = TLoginbakService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.del==null &&( bl ? x.LGbak ==null: x.LGbak == "wxload"), x => x.intime, false);
            // var userInfoList = T_YxPersonService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.DEL == 0, x => x.ID, true);
             var temp =from u in userInfoList
                        select new
@@ -567,21 +569,17 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             string ScName = Request["ScName"] != null ? Request["ScName"].ToString() : string.Empty;
             bool ispd = Request["ScB"] == null ? false : Convert.ToBoolean(Request["ScB"]);
             int totalCount = 0;
-            IQueryable<WxUser> wu = WxUserService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.Del != null, x => x.AddTime, false).DefaultIfEmpty();
-            if (ScName == string.Empty) {
-                if (!ispd)
-                {
-                    wu = wu.Where(x => x.UserInfoID == null).DefaultIfEmpty();
-                }
-                else
-                {
-                    wu = wu.Where(x => x.UserInfoID != null).DefaultIfEmpty();
-                }
-            }
             
+            IQueryable<WxUser> wu = WxUserService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.Del != null && (ScName == string.Empty ? (!ispd ? x.UserInfoID == null : x.UserInfoID != null) : true), x => x.AddTime, false).DefaultIfEmpty();
+            if (ScName == string.Empty)
+            {
+                wu = WxUserService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.Del != null && (!ispd ? x.UserInfoID == null : x.UserInfoID != null), x => x.AddTime, false).DefaultIfEmpty();               
+            }     
             if (ScName != string.Empty) {
-                wu = wu.Where(x => x.wxName.Contains(ScName)).DefaultIfEmpty();
+                wu = WxUserService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.Del != null&&x.wxName.Contains(ScName), x => x.AddTime, false).DefaultIfEmpty();               
             }
+
+
             if (wu.ToList()[0] == null)
             {
                 return Json(new { rows ="", total = totalCount }, JsonRequestBehavior.AllowGet);
@@ -730,5 +728,28 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             }
            
         }
+
+
+        #region 修改个人存储数据共享
+        public ActionResult EditOpenS() {
+            int istor = Request["istorl"] == null ? 1 : Convert.ToInt32(Request["istorl"]);
+            var ThisU= UserInfoService.LoadEntities(x => x.ID == LoginUser.ID).FirstOrDefault();
+            ThisU.GeRenSaveOpen = istor;
+            if (UserInfoService.EditEntity(ThisU))
+            {
+                return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+            }
+            else {
+                return Json(new { ret = "在修改时出现错误！" }, JsonRequestBehavior.AllowGet);
+            }
+            
+        }
+
+        public ActionResult GetGerentable() {
+            var use= UserInfoService.LoadEntities(x => x.ID == LoginUser.ID).FirstOrDefault();
+            return Json(new {ret="ok",msg = use.GeRenSaveOpen == null ? "关闭" : (use.GeRenSaveOpen == 1 ? "关闭" : "开启") }, JsonRequestBehavior.AllowGet);
+            
+        }
+        #endregion
     }
 }

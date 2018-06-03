@@ -11,5 +11,6 @@ namespace CZBK.ItcastOA.IBLL
     public partial interface IT_UserSaveService : IBaseService<T_UserSave>
     {
         IQueryable<T_UserSave> LoadSearchEntities(UserInfoParam userInfoSearchParam);
+        IQueryable<T_UserSave> LoadFenx(UserInfoParam userInfoSearchParam);
     }
 }

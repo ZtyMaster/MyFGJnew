@@ -49,6 +49,8 @@
         var strval;
         var PageVal = 1, SazeVla = 35;
         var Lstr;
+        var GeOr = false;
+        var hidden = false;
        
         function enable() {
             $('a.easyui-linkbutton').linkbutton('enable');
@@ -114,7 +116,8 @@
             $("#SeeMap").css("display", "none");
             $("#DeditMoneyDIV").css("display", "none");
             $("#addDiv").css("display", "none");
-            updg();     
+            var pars = {};
+            updg(pars);
         });
         var __xx, __yy;
         //更新DG表
@@ -152,6 +155,30 @@
                     handler: function () {
                         SeeImage();
                     }
+                }, '-', {
+                    text: '个人数据',
+                    iconCls: 'icon-search',
+                    handler: function () {
+                        var gridPanel = $("#tt").datagrid("getPanel");//先获取panel对象 
+                        gridPanel.panel('setTitle', '个人数据');//再通过panel对象去修改title
+                        GeOr = false;
+                        hidden = false;
+                        var pars = {};
+                        updg(pars);
+                        
+                    }
+                }, '-', {
+                    text: '企业数据',
+                    iconCls: 'icon-search',
+                    handler: function () {                        
+                        GeOr = true;
+                        hidden = true;
+                        var pars = {};
+                        updg(pars);
+                        var gridPanel = $("#tt").datagrid("getPanel");//先获取panel对象 
+                        gridPanel.panel('setTitle', '企业数据');//再通过panel对象去修改title
+                       
+                    }
                 }, '-'
                 ]
             });
@@ -186,6 +213,9 @@
             updg(pars)   
         }
         function loadData(pars) {
+           
+            pars.GeOr = GeOr;
+            
             $('#tt').datagrid({
                 url: '/MyhtmlInfo/GetHref',
                 title: '个人数据',
@@ -207,7 +237,7 @@
                     { field: ' FwBiaoJiID', title: '标记ID', width: 20, align: 'center', hidden:'true' },
                     
                     {
-                        field: 'FwColors', title: '标记', align: 'center',
+                        field: 'FwColors', title: '标记', align: 'center',hidden:hidden,
                         formatter: function (value, row, index)
                         {
                             var bj = "";
@@ -215,6 +245,9 @@
                             {  bj = "<img src='/Content/Images/biaoji/" + value + ".png' height='30'  />"; }
                             return bj;
                         }
+                    },
+                    {
+                        field: 'UserName', title: '归属人', align: 'center', hidden: !hidden,
                     },
                     {
                         field: 'Image_str', title: '图片', align: 'center',
@@ -246,19 +279,30 @@
                     { field: 'FwLoucheng', title: '楼层', width: 30, align: 'center' },
                     { field: 'FwZhuangxiu', title: '装修', width: 30, align: 'center' },
                     { field: 'FwChaoxiang', title: '朝向', width: 30, align: 'center' },
-                    { field: 'FwNianxian', title: '产权', width: 30, align: 'center' },
+                    { field: 'FwNianxian', title: '产权', width: 30, align: 'center'},
                      {
-                         field: 'Operator', title: '操作', halign: 'center',
+                         field: 'Operator', title: '操作', halign: 'center',  hidden: hidden ,
                          formatter: function (value, row, index) {
                              var str = "<a href='javascript: ZhuiJia()' ids='" + row.ID +
                            "'  class='l-btn' style='padding:2px 5px' >房源跟踪</a>";
                              str =str+ " &nbsp&nbsp<a href='javascript:EidtMoney(0)' ids='" + row.id +
                        "'  class='l-btn' style='padding:2px 5px' >修改价格</a>";
-                             str = str + " &nbsp&nbsp<a href='javascript:SeeImage()' ids='" + row.id +
+
+                             var  str1 =  " &nbsp&nbsp<a href='javascript:SeeImage()' ids='" + row.id +
                        "'   class='l-btn' style='padding:2px 5px' >查看图片</a>";
-                             str = str + " &nbsp&nbsp<a href='javascript:SeeMap()' ids='" + row.id +
+                             str1 = str1 + " &nbsp&nbsp<a href='javascript:SeeMap()' ids='" + row.id +
                      "'   class='l-btn' style='padding:2px 5px' >地图浏览</a>";
-                             return str;
+                             return hidden;
+                         }
+                     },
+                     {
+                         field: 'Operator1', title: '操作', halign: 'center', hidden: !hidden,
+                         formatter: function (value, row, index) {  
+                             var str1 = " &nbsp&nbsp<a href='javascript:SeeImage()' ids='" + row.id +
+                       "'   class='l-btn' style='padding:2px 5px' >查看图片</a>";
+                             str1 = str1 + " &nbsp&nbsp<a href='javascript:SeeMap()' ids='" + row.id +
+                     "'   class='l-btn' style='padding:2px 5px' >地图浏览</a>";
+                             return str1;
                          }
                      }
 
@@ -382,7 +426,7 @@
 
                 @{
 
-                    for (int i = 0; i < ViewBag.ItemsCount; i++)
+                    for (int i = 0; i < ViewBag.ItemsCount-1; i++)
                     {
                         <select id="str_@i" class="easyui-combobox" name="dept" style="width:80px;">
                             @{foreach (T_Items Item in ViewBag.Items)

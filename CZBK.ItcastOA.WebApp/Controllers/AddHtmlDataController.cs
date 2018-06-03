@@ -119,7 +119,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 tfhd.Money_int = decimal.Parse(Request["Smoney"]);
                 tfhd.FwSumMoney = Request["Amoney"] + "万(单价" + tfhd.Money_int + "元/㎡)";
                 tfhd.FwHuXing = Request["HXs"] + "室" + Request["HXt"] + "厅" + Request["HXw"] + "卫";
-                tfhd.SumMoneyID = AllClass.GetMoney(Request["Smoney"].ToString());
+                tfhd.SumMoneyID = AllClass.GetMoney(Request["Amoney"]);
                 tfhd.MianjiID = AllClass.GeiMinji(tfhd.FwMianji);
                 tfhd.HuXingID = AllClass.GetHuxing(tfhd.FwHuXing);
                 tfhd.AddUserTiem = MvcApplication.GetT_time();

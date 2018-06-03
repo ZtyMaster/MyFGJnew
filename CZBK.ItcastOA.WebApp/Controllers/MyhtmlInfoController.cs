@@ -19,6 +19,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         IBLL.IUserInfo_CityService UserInfo_CityService { get; set; }
         IBLL.IT_BiaoJiInfoService T_BiaoJiInfoService { get; set; }
         IBLL.IT_ItemsService T_ItemsService { get; set; }
+        IBLL.IUserInfoService UserInfoService { get; set; }
         short Delflag = (short)DelFlagEnum.Normarl;
         short GongG = (short)GongGEnum.Show;
         public ActionResult Index()
@@ -31,12 +32,12 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             ViewBag.ItemsCount = ItemsCount.Count;
             ViewBag.City = City;
             ViewBag.Items = Items;
-          
 
-           
-           
+
+
+
             var BijiaoList = T_BiaoJiInfoService.LoadEntities(u => u.DelFlag == Delflag).ToList();
-           
+
             ViewBag.Bj = BijiaoList;
             return View();
         }
@@ -47,6 +48,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             var totalCount = int.MaxValue;
             var CityID = UserInfo_CityService.LoadEntities(x => x.UserInfo_ID == LoginUser.ID).FirstOrDefault();
             string Str = Request["Str"];
+            bool GeOr = Request["GeOr"] == null ? false : Convert.ToBoolean(Request["GeOr"]);
             //构建搜索条件          
             UserInfoParam userInfoParam = new UserInfoParam()
             {
@@ -55,45 +57,99 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 PageSize = pageSize,
                 TotalCount = totalCount,
                 Str = Str,
-                Tval= Request["Tval"]
+                Tval = Request["Tval"],
+                Isee = GeOr,
+                MasterID = (int)LoginUser.MasterID
             };
-            SetInfoParam(userInfoParam,T_ItemsService);
+            SetInfoParam(userInfoParam, T_ItemsService);
             //找到所有该人员信息
-            var savelist = T_SaveHtmlDataService.LoadPageEntities<DateTime>(pageIndex, pageSize, out totalCount, x => x.UserID == LoginUser.ID &&x.GongGong== GongG && x.DelFlag == Delflag, x => x.SaveTime, false).DefaultIfEmpty();
-            var ActionInfoList = T_FGJHtmlDataService.LoadSearchFrist(userInfoParam, false,true);
+            var savelist = T_SaveHtmlDataService.LoadPageEntities<DateTime>(pageIndex, pageSize, out totalCount, x => x.UserID == LoginUser.ID && x.GongGong == GongG && x.DelFlag == Delflag, x => x.SaveTime, false).DefaultIfEmpty();
+            var ActionInfoList = T_FGJHtmlDataService.LoadSearchFrist(userInfoParam, false, true);
 
-            var temp = from a in ActionInfoList
-                       from b in savelist
-                       where b.HtmldataID == a.ID
-                       select new
-                       {
-                           ID = a.ID,
-                           HLName = a.HLName,
-                           Image_str = (a.Image_str.IndexOf("有") >= 0 ? "有" : "无"),
-                           FbTime = a.FbTime,
-                           PersonName = a.PersonName,
-                           Address = a.Address,
-                           photo = a.photo,
-                           Laiyuan = a.Laiyuan,
-                           FwSumMoney = a.FwSumMoney,
-                           FwHuXing = a.FwHuXing,
-                           FwLoucheng = a.FwLoucheng,
-                           FwZhuangxiu = a.FwZhuangxiu,
-                           FwChaoxiang = a.FwChaoxiang,
-                           FwNianxian = a.FwNianxian,
-                           FwMianji = a.FwMianji,
-                           FwBiaoJi = b.BiaoJiId,
-                           FwBiaoJiID = b.ID,
-                           FwColors = b.T_BiaoJiInfo.Colors,
-                           Fwpingmi=a.Pingmi_int,
-                           FwPingmiMoney=a.Money_int,
-                           Fmimage=a.Image_str
-                       };
+            var temp = GeOr ? from a in ActionInfoList
+                              select new ThisMyclass
+                              {
+                                  ID = a.ID,
+                                  HLName = a.HLName,
+                                  Image_str = (a.Image_str.IndexOf("有") >= 0 ? "有" : "无"),
+                                  FbTime = a.FbTime,
+                                  PersonName = a.PersonName,
+                                  Address = a.Address,
+                                  photo = a.photo,
+                                  Laiyuan = a.Laiyuan,
+                                  FwSumMoney = a.FwSumMoney,
+                                  FwHuXing = a.FwHuXing,
+                                  FwLoucheng = a.FwLoucheng,
+                                  FwZhuangxiu = a.FwZhuangxiu,
+                                  FwChaoxiang = a.FwChaoxiang,
+                                  FwNianxian = a.FwNianxian,
+                                  FwMianji = a.FwMianji,
+                                  FwBiaoJi = (int?)0,
+                                  FwBiaoJiID = (long)0,
+                                  FwColors = "",
+                                  Fwpingmi = a.Pingmi_int,
+                                  FwPingmiMoney = a.Money_int,
+                                  Fmimage = a.Image_str,
 
-            return Json(new { rows = temp, total = userInfoParam.TotalCount }, JsonRequestBehavior.AllowGet);
+                              } : from a in ActionInfoList
+                                  from b in savelist
+                                  where b.HtmldataID == a.ID
+                                  select new ThisMyclass
+                                  {
+                                      ID = a.ID,
+                                      HLName = a.HLName,
+                                      Image_str = (a.Image_str.IndexOf("有") >= 0 ? "有" : "无"),
+                                      FbTime = a.FbTime,
+                                      PersonName = a.PersonName,
+                                      Address = a.Address,
+                                      photo = a.photo,
+                                      Laiyuan = a.Laiyuan,
+                                      FwSumMoney = a.FwSumMoney,
+                                      FwHuXing = a.FwHuXing,
+                                      FwLoucheng = a.FwLoucheng,
+                                      FwZhuangxiu = a.FwZhuangxiu,
+                                      FwChaoxiang = a.FwChaoxiang,
+                                      FwNianxian = a.FwNianxian,
+                                      FwMianji = a.FwMianji,
+                                      FwBiaoJi = b.BiaoJiId,
+                                      FwBiaoJiID = b.ID,
+                                      FwColors = b.T_BiaoJiInfo.Colors,
+                                      Fwpingmi = a.Pingmi_int,
+                                      FwPingmiMoney = a.Money_int,
+                                      Fmimage = a.Image_str
+                                  };
+
+            List<ThisMyclass> ltm = new List<ThisMyclass>();
+            if (GeOr)
+            {
+                var Masters = UserInfoService.LoadEntities(x => x.MasterID == LoginUser.MasterID).Select(x=>x.T_SaveHtmlData);
+                foreach (var p in temp)
+                {
+                    var pp = Masters.Select(x => x.Where(z => z.HtmldataID == p.ID).DefaultIfEmpty());                   
+                    ThisMyclass tmc = new ThisMyclass();
+                    tmc = p;
+                    foreach (var tmp in pp)
+                    {
+                        if (tmp.First() != null)
+                        {
+                            tmc.UserID = tmp.First().UserID;
+                            tmc.UserName = tmp.First().UserInfo.UName;
+                        }
+                    }
+                    tmc.MyID = LoginUser.ID;
+                    if (tmc.MyID != tmc.UserID) {
+                        ltm.Add(tmc);
+                    }
+                    
+                }
+            }
+            else {
+                ltm = temp.ToList();
+            }
+            return Json(new { rows = ltm, total = userInfoParam.TotalCount }, JsonRequestBehavior.AllowGet);
         }
 
-        public   static void SetInfoParam(UserInfoParam userInfoParam, IBLL.IT_ItemsService T_ItemsService)
+        public static void SetInfoParam(UserInfoParam userInfoParam, IBLL.IT_ItemsService T_ItemsService)
         {
             if (userInfoParam.Tval != null)
             {
@@ -129,7 +185,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         {
             string spik = Request["strId"].ToString();
             string[] thisS = spik.Split(',');
-            int BiaojiInfoID =int.Parse(Request["BiaojiInfoID"]);
+            int BiaojiInfoID = int.Parse(Request["BiaojiInfoID"]);
             foreach (string s in thisS)
             {
                 int id = int.Parse(s);
@@ -138,26 +194,26 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 thd.BiaoJiTime = DateTime.Now;
                 T_SaveHtmlDataService.EditEntity(thd);
 
-            }           
+            }
             return Content("ok");
         }
         #region 修改单价
         public ActionResult EditMoney()
         {
-            var id = Request["ID"]!=null?Convert.ToInt64(Request["ID"]):0;
-            var EditSumMoney =Convert.ToDecimal(Request["EditSumMoney"]);
+            var id = Request["ID"] != null ? Convert.ToInt64(Request["ID"]) : 0;
+            var EditSumMoney = Convert.ToDecimal(Request["EditSumMoney"]);
             var Tfg = T_FGJHtmlDataService.LoadEntities(x => x.ID == id).FirstOrDefault();
-            Tfg.FwSumMoney = (EditSumMoney/10000).ToString()+"万元";
+            Tfg.FwSumMoney = (EditSumMoney / 10000).ToString() + "万元";
             Tfg.SumMoneyID = GetMoney(Tfg.FwSumMoney);
-            Tfg.Money_int = Convert.ToDecimal(Math.Round(Convert.ToDouble( EditSumMoney / Tfg.Pingmi_int), 2));
+            Tfg.Money_int = Convert.ToDecimal(Math.Round(Convert.ToDouble(EditSumMoney / Tfg.Pingmi_int), 2));
             if (T_FGJHtmlDataService.EditEntity(Tfg))
             {
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
             else
             { return Json("no", JsonRequestBehavior.AllowGet); }
-            
-            
+
+
         }
         #endregion
         private static int GetMoney(string da)
@@ -212,5 +268,35 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 return 10;
             }
         }
+
+
+    }
+
+    public class ThisMyclass{
+      public long ID { get; set; }
+        public string HLName { get; set; }
+        public string Image_str { get; set; }
+        public DateTime FbTime { get; set; }
+        public string PersonName { get; set; }
+        public string Address { get; set; }
+        public string photo { get; set; }
+        public string Laiyuan { get; set; }
+        public string FwSumMoney { get; set; }
+        public string FwHuXing { get; set; }
+        public string FwLoucheng { get; set; }
+        public string FwZhuangxiu { get; set; }
+        public string FwChaoxiang { get; set; }
+        public string FwNianxian { get; set; }
+        public string FwMianji { get; set; }
+        public int? FwBiaoJi { get; set; }
+        public long FwBiaoJiID { get; set; }
+        public string FwColors { get; set; }
+        public decimal? Fwpingmi { get; set; }
+        public decimal? FwPingmiMoney { get; set; }
+        public string Fmimage { get; set; }
+        public int UserID { get; set; }
+        public int MyID { get; set; }
+        public string UserName { get; set; }
+
     }
 }

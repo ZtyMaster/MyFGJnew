@@ -413,6 +413,14 @@
           <Property Name="Text" Type="nvarchar(max)" />
           <Property Name="AddUser" Type="int" />
         </EntityType>
+        <EntityType Name="TtextImage">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TextID" Type="bigint" Nullable="false" />
+          <Property Name="ImageStr" Type="nvarchar" MaxLength="350" Nullable="false" />
+        </EntityType>
         <EntityType Name="UserInfo">
           <Key>
             <PropertyRef Name="ID" />
@@ -436,6 +444,10 @@
           <Property Name="YxPersonID" Type="bigint" />
           <Property Name="khName" Type="nvarchar" MaxLength="50" />
           <Property Name="KhPhoto" Type="nvarchar" MaxLength="150" />
+          <Property Name="GeRenSaveOpen" Type="int" />
+          <Property Name="Bak1" Type="int" />
+          <Property Name="Bak2" Type="nvarchar" MaxLength="50" />
+          <Property Name="Bak3" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="UserInfo_City">
           <Key>
@@ -881,6 +893,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TtextImage_Ttext">
+          <End Role="Ttext" Type="Self.Ttext" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TtextImage" Type="Self.TtextImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ttext">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TtextImage">
+              <PropertyRef Name="TextID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserInfo">
           <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="1" />
           <End Role="SeeQzCz" Type="Self.SeeQzCz" Multiplicity="*" />
@@ -1079,6 +1105,7 @@
           <EntitySet Name="T_ZhuaiJiaBak" EntityType="Self.T_ZhuaiJiaBak" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TLoginbak" EntityType="Self.TLoginbak" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Ttext" EntityType="Self.Ttext" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TtextImage" EntityType="Self.TtextImage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserInfo" EntityType="Self.UserInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserInfo_City" EntityType="Self.UserInfo_City" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserInfoDepartment" EntityType="Self.UserInfoDepartment" Schema="dbo" store:Type="Tables" />
@@ -1212,6 +1239,10 @@
           <AssociationSet Name="FK_Ttext_user" Association="Self.FK_Ttext_user">
             <End Role="UserInfo" EntitySet="UserInfo" />
             <End Role="Ttext" EntitySet="Ttext" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TtextImage_Ttext" Association="Self.FK_TtextImage_Ttext">
+            <End Role="Ttext" EntitySet="Ttext" />
+            <End Role="TtextImage" EntitySet="TtextImage" />
           </AssociationSet>
           <AssociationSet Name="FK_UserInfo" Association="Self.FK_UserInfo">
             <End Role="UserInfo" EntitySet="UserInfo" />
@@ -1484,6 +1515,11 @@
             <End Role="UserInfo" EntitySet="UserInfo" />
             <End Role="Ttext" EntitySet="Ttexts" />
           </AssociationSet>
+          <EntitySet Name="TtextImages" EntityType="OAModel.TtextImage" />
+          <AssociationSet Name="FK_TtextImage_Ttext" Association="OAModel.FK_TtextImage_Ttext">
+            <End Role="Ttext" EntitySet="Ttexts" />
+            <End Role="TtextImage" EntitySet="TtextImages" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="UserInfo">
           <Key>
@@ -1533,6 +1569,10 @@
           <NavigationProperty Name="T_AppOpen" Relationship="OAModel.FK_T_AppOpen_UserInfo" FromRole="UserInfo" ToRole="T_AppOpen" />
           <NavigationProperty Name="WxUsers" Relationship="OAModel.FK_WxUser_UserInfo" FromRole="UserInfo" ToRole="WxUser" />
           <NavigationProperty Name="Ttexts" Relationship="OAModel.FK_Ttext_user" FromRole="UserInfo" ToRole="Ttext" />
+          <Property Name="GeRenSaveOpen" Type="Int32" />
+          <Property Name="Bak1" Type="Int32" />
+          <Property Name="Bak2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Bak3" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ActionInfo">
           <Key>
@@ -2516,6 +2556,7 @@
           <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="AddUser" Type="Int32" />
           <NavigationProperty Name="UserInfo" Relationship="OAModel.FK_Ttext_user" FromRole="Ttext" ToRole="UserInfo" />
+          <NavigationProperty Name="TtextImages" Relationship="OAModel.FK_TtextImage_Ttext" FromRole="Ttext" ToRole="TtextImage" />
         </EntityType>
         <Association Name="FK_WxUser_yxperson">
           <End Type="OAModel.T_YxPerson" Role="T_YxPerson" Multiplicity="0..1" />
@@ -2541,6 +2582,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="TtextImage">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TextID" Type="Int64" Nullable="false" />
+          <Property Name="ImageStr" Type="String" Nullable="false" MaxLength="350" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Ttext" Relationship="OAModel.FK_TtextImage_Ttext" FromRole="TtextImage" ToRole="Ttext" />
+        </EntityType>
+        <Association Name="FK_TtextImage_Ttext">
+          <End Type="OAModel.Ttext" Role="Ttext" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="OAModel.TtextImage" Role="TtextImage" Multiplicity="*" >
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="Ttext">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TtextImage">
+              <PropertyRef Name="TextID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2550,6 +2615,10 @@
           <EntitySetMapping Name="UserInfo">
             <EntityTypeMapping TypeName="OAModel.UserInfo">
               <MappingFragment StoreEntitySet="UserInfo">
+                <ScalarProperty Name="Bak3" ColumnName="Bak3" />
+                <ScalarProperty Name="Bak2" ColumnName="Bak2" />
+                <ScalarProperty Name="Bak1" ColumnName="Bak1" />
+                <ScalarProperty Name="GeRenSaveOpen" ColumnName="GeRenSaveOpen" />
                 <ScalarProperty Name="KhPhoto" ColumnName="KhPhoto" />
                 <ScalarProperty Name="khName" ColumnName="khName" />
                 <ScalarProperty Name="YxPersonID" ColumnName="YxPersonID" />
@@ -3061,6 +3130,15 @@
                 <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="AddTime" ColumnName="AddTime" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TtextImages">
+            <EntityTypeMapping TypeName="OAModel.TtextImage">
+              <MappingFragment StoreEntitySet="TtextImage">
+                <ScalarProperty Name="ImageStr" ColumnName="ImageStr" />
+                <ScalarProperty Name="TextID" ColumnName="TextID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

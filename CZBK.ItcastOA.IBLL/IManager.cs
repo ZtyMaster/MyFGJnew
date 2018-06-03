@@ -155,6 +155,11 @@ namespace CZBK.ItcastOA.IBLL
        
     }   
 	
+	public partial interface ITtextImageService : IBaseService<TtextImage>
+    {
+       
+    }   
+	
 	public partial interface IUserInfoService : IBaseService<UserInfo>
     {
        

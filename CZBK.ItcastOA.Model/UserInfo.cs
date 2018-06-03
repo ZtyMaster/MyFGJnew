@@ -61,6 +61,10 @@ namespace CZBK.ItcastOA.Model
         public Nullable<long> YxPersonID { get; set; }
         public string khName { get; set; }
         public string KhPhoto { get; set; }
+        public Nullable<int> GeRenSaveOpen { get; set; }
+        public Nullable<int> Bak1 { get; set; }
+        public string Bak2 { get; set; }
+        public string Bak3 { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<R_UserInfo_ActionInfo> R_UserInfo_ActionInfo { get; set; }

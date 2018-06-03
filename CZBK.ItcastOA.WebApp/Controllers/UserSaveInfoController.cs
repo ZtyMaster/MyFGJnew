@@ -169,7 +169,9 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 Str = Str,
                 Tval = Request["Tval"],
                 Items = Items,
-                IsMaster = true
+                IsMaster = true,
+                MasterID=(int)LoginUser.MasterID
+                
             };
             //MyhtmlInfoController mhic = new MyhtmlInfoController();            
             //mhic.SetInfoParam(userInfoParam, T_ItemsService);
@@ -192,12 +194,11 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 userInfoParam.Pingmu = T_ItemsService.LoadEntities(x => x.ID == imid1).FirstOrDefault().StrID.ToString();
                 #endregion
             }            
-            var usersaveinfo = T_UserSaveService.LoadSearchEntities(userInfoParam);
+            var usersaveinfo = T_UserSaveService.LoadFenx(userInfoParam);
 
             //找到所有该人员信息
             var savelist = T_UserSaveService.LoadPageEntities<DateTime>(pageIndex, pageSize, out totalCount,x=> x.delflag == Delflag && x.UserID==LoginUser.ID, x => x.AddTime, false).DefaultIfEmpty();
-            // var ActionInfoList = T_FGJHtmlDataService.LoadSearchEntities(userInfoParam, false);
-            //var biaoji = T_BiaoJiInfoService.LoadEntities(x=>x.DelFlag== Delflag).DefaultIfEmpty();
+          
             var Iitems = T_ItemsService.LoadEntities(x=>x.Icons==2||x.Icons==3).DefaultIfEmpty();
             var temp = from a in usersaveinfo
                        from b in Iitems
@@ -224,7 +225,10 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                            FwColors = a.T_BiaoJiInfo.Colors,
                            Bak = a.Bak,
                            Image = a.UserSaveImages.Count,
-                           Items=a.Items
+                           Items=a.Items,
+                           UserID= a.UserID,
+                           LoginID=LoginUser.ID,
+                           UserName=a.UserInfo.UName
                        };
 
             return Json(new { rows = temp, total = totalCount }, JsonRequestBehavior.AllowGet);

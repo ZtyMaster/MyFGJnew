@@ -71,6 +71,7 @@
     <property name="T_SaveHtmlDataService" ref="T_SaveHtmlDataService" />
     <property name="T_BiaoJiInfoService" ref="T_BiaoJiInfoService" />
     <property name="T_ItemsService" ref="T_ItemsService" />
+    <property name="UserInfoService" ref="UserInfoService" />
   </object>
   <object type="CZBK.ItcastOA.WebApp.Controllers.UserSaveInfoController, CZBK.ItcastOA.WebApp" singleton="false" >   
     <property name="UserInfo_CityService" ref="UserInfo_CityService" />
@@ -144,6 +145,7 @@
   </object>
   <object type="CZBK.ItcastOA.WebApp.Controllers.TestController, CZBK.ItcastOA.WebApp" singleton="false" >
     <property name="TtextService" ref="TtextService" />
+    <property name="TtextImageService" ref="TtextImageService" />
     
   </object>
 

@@ -285,7 +285,7 @@
             <div style="margin-bottom:5px" id="XUANX">
                 <span>搜索项: </span>
                 @{
-                    for (int i = 0; i < ViewBag.ItemsCount; i++)
+                    for (int i = 0; i < ViewBag.ItemsCount-1; i++)
                     {
                         <select id="str_@i" class="easyui-combobox" name="dept" style="width:80px;">
                             @{foreach (T_Items Item in ViewBag.Items)

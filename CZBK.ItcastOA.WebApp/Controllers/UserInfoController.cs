@@ -434,7 +434,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             int pageSize = Request["rows"] != null ? int.Parse(Request["rows"]) : 5;
             int totalCount = 0;
             bool bl = Convert.ToBoolean(Request["isbool"]);
-            var userInfoList = TLoginbakService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.del==null &&( bl ? x.LGbak ==null: x.LGbak == "wxload"), x => x.intime, false);
+            var userInfoList = TLoginbakService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.del==null && x.UserInfo.UName != "MinApp" && ( bl ? x.LGbak ==null: x.LGbak == "wxload"), x => x.intime, false);
            // var userInfoList = T_YxPersonService.LoadPageEntities(pageIndex, pageSize, out totalCount, x => x.DEL == 0, x => x.ID, true);
             var temp =from u in userInfoList
                        select new

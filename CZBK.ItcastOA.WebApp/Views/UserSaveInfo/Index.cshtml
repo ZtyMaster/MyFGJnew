@@ -47,7 +47,8 @@
     <script type="text/javascript">
         var strval;
         var PageVal = 1, SazeVla = 15;
-        var ImageMaxCount = "@ViewBag.imagecount"
+        var ImageMaxCount = "@ViewBag.imagecount";
+        var isbool = false;
         function enable() {
             $('a.easyui-linkbutton').linkbutton('enable');
         }
@@ -337,7 +338,7 @@
                     },
                      { field: 'TextName', title: '信息名称', align: 'center', width: 200 },
                     { field: 'PresonName', title: '联系人', align: 'center' },
-                    { field: 'PresonPhoto', title: '联系电话', align: 'center' },
+                    { field: 'PresonPhoto', title: '联系电话', align: 'center', },
                     {
                         field: 'Address', title: '地址', width: 120,
                     },
@@ -616,7 +617,7 @@
                 <span>搜索项: </span>
                 @{
 
-                    for (int i = 0; i < ViewBag.ItemsCount; i++)
+                    for (int i = 0; i < ViewBag.ItemsCount-1; i++)
                     {
                 <select id="str_@i" class="easyui-combobox" name="dept" style="width:100px;">
                     @{foreach (T_Items Item in ViewBag.Items)

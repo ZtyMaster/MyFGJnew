@@ -3,6 +3,7 @@ using CZBK.ItcastOA.Model.SearchParam;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -31,7 +32,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         IBLL.IT_ChuZhuInfoService T_ChuZhuInfoService { get; set; }
         IBLL.IT_QuyuService T_QuyuService { get; set; }
         IBLL.IT_YxPersonService T_YxPersonService { set; get; }
-         
+
         IBLL.IWxUserService WxUserService { get; set; }
 
         public ActionResult Index()
@@ -57,10 +58,10 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                 for (int i = 0; i < list.Length; i++)
                 {
                     string[] ti = list[i].Split('>');
-                    if(i == 0)
+                    if (i == 0)
                     {
                         uip.money = ti[0];
-                    }else if(i == 1)
+                    } else if (i == 1)
                     {
                         uip.Pingmu = ti[0];
                     }
@@ -87,7 +88,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                         };
 
             return Json(new { rows = Rtemo, total = uip.TotalCount }, JsonRequestBehavior.AllowGet);
-    }
+        }
         public ActionResult GetHrefForCS()
         {
             var cityStr = Request["cityStr"];
@@ -95,48 +96,48 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             int pageIndex = Request["page"] != null ? int.Parse(Request["page"]) : 1;
             int pageSize = Request["rows"] != null ? int.Parse(Request["rows"]) : 35;
 
-                string Str = Request["Str"];
-                var totalCount = int.MaxValue;
-                //构建搜索条件          
-                UserInfoParam userInfoParam = new UserInfoParam()
+            string Str = Request["Str"];
+            var totalCount = int.MaxValue;
+            //构建搜索条件          
+            UserInfoParam userInfoParam = new UserInfoParam()
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Str = Str,
+                C_id = CityID.ID
+            };
+            if (Request["Tval"] != null)
+            {
+                #region MyRegion
+                string str = Request["Tval"];
+                string[] list = str.Split(',');
+                for (int i = 0; i < list.Length; i++)
                 {
-                    PageIndex = pageIndex,
-                    PageSize = pageSize,
-                    TotalCount = totalCount,
-                    Str = Str,
-                    C_id = CityID.ID
-                };
-                if (Request["Tval"] != null)
-                {
-                    #region MyRegion
-                    string str = Request["Tval"];
-                    string[] list = str.Split(',');
-                    for (int i = 0; i < list.Length; i++)
+                    string[] ti = list[i].Split('>');
+                    int cc = int.Parse(ti[0]);
+                    var this_i = T_ItemsService.LoadEntities(x => x.ID == cc).FirstOrDefault();
+                    switch (this_i.Icons)
                     {
-                        string[] ti = list[i].Split('>');
-                        int cc = int.Parse(ti[0]);
-                        var this_i = T_ItemsService.LoadEntities(x => x.ID == cc).FirstOrDefault();
-                        switch (this_i.Icons)
-                        {
-                            case 0:
-                                userInfoParam.money = ti[1].Trim() == "0" ? null : this_i.StrID.ToString();
-                                break;
-                            case 1:
-                                userInfoParam.Pingmu = ti[1].Trim() == "0" ? null : this_i.StrID.ToString();
-                                break;
-                            case 2:
-                                userInfoParam.Tingshi = ti[1].Trim() == "0" ? null : this_i.StrID.ToString();
-                                break;
-                            case 3:
-                                userInfoParam.Zhuanxiu = ti[1].Trim() == "0" ? null : ti[1].ToString().Trim() == "装修" ? null : ti[1];
-                                break;
-                        }
+                        case 0:
+                            userInfoParam.money = ti[1].Trim() == "0" ? null : this_i.StrID.ToString();
+                            break;
+                        case 1:
+                            userInfoParam.Pingmu = ti[1].Trim() == "0" ? null : this_i.StrID.ToString();
+                            break;
+                        case 2:
+                            userInfoParam.Tingshi = ti[1].Trim() == "0" ? null : this_i.StrID.ToString();
+                            break;
+                        case 3:
+                            userInfoParam.Zhuanxiu = ti[1].Trim() == "0" ? null : ti[1].ToString().Trim() == "装修" ? null : ti[1];
+                            break;
                     }
-                    #endregion
                 }
-                var temp = GetJson(userInfoParam);
-                return Json(new { rows = temp, total = userInfoParam.TotalCount }, JsonRequestBehavior.AllowGet);
+                #endregion
             }
+            var temp = GetJson(userInfoParam);
+            return Json(new { rows = temp, total = userInfoParam.TotalCount }, JsonRequestBehavior.AllowGet);
+        }
 
         public object GetJson(UserInfoParam userInfoParam)
         {
@@ -254,7 +255,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             var kfPersonQQ = GongGaoService.LoadEntities(x => x.Items == 4).FirstOrDefault();
             kfinfo.kfPersonQQ = kfPersonQQ.text;
             var temp = GongGaoService.LoadEntities(x => x.Items == 3).DefaultIfEmpty().ToList();
-            foreach(var a in temp)
+            foreach (var a in temp)
             {
                 switch (a.bak)
                 {
@@ -278,9 +279,9 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         #region 获取选项卡条件数据
         public ActionResult GetTabInfo()
         {
-            var temp = T_ItemsService.LoadEntities(x => (x.Icons == 0 || x.Icons == 1 || x.Icons == 2|| x.Icons == 4) && x.Str_val != "0").DefaultIfEmpty().ToList();
+            var temp = T_ItemsService.LoadEntities(x => (x.Icons == 0 || x.Icons == 1 || x.Icons == 2 || x.Icons == 4) && x.Str_val != "0").DefaultIfEmpty().ToList();
             List<TabInfo> tiMoney = new List<TabInfo>();
-            List<TabInfo> tiMianji = new List<TabInfo>(); 
+            List<TabInfo> tiMianji = new List<TabInfo>();
             List<TabInfo> tiHuxing = new List<TabInfo>();
             List<TabInfo> tiZujin = new List<TabInfo>();
             foreach (var a in temp)
@@ -317,31 +318,31 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                         break;
                 }
             }
-            var cityStr = Request["cityStr"] ;
+            var cityStr = Request["cityStr"];
             var rtmp = T_QuyuService.LoadEntities(x => x.T_City.City_str == cityStr).DefaultIfEmpty().ToList();
-            if(rtmp != null & rtmp[0] != null)
+            if (rtmp != null & rtmp[0] != null)
             {
                 var tiArea = from a in rtmp
-                           select new
-                           {
-                               id = a.ID,
-                               name = a.QY_connet
-                           };
-                return Json(new { ret = "okAll", tiMoney = tiMoney, tiMianji = tiMianji, tiArea= tiArea,tiHuxing= tiHuxing, tiZujin= tiZujin }, JsonRequestBehavior.AllowGet);
+                             select new
+                             {
+                                 id = a.ID,
+                                 name = a.QY_connet
+                             };
+                return Json(new { ret = "okAll", tiMoney = tiMoney, tiMianji = tiMianji, tiArea = tiArea, tiHuxing = tiHuxing, tiZujin = tiZujin }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return Json(new { ret = "ok", tiMoney = tiMoney, tiMianji = tiMianji , tiHuxing = tiHuxing, tiZujin= tiZujin }, JsonRequestBehavior.AllowGet);
+                return Json(new { ret = "ok", tiMoney = tiMoney, tiMianji = tiMianji, tiHuxing = tiHuxing, tiZujin = tiZujin }, JsonRequestBehavior.AllowGet);
             }
         }
         #endregion
         public ActionResult GetAllCityList()
         {
             var temp = T_CityService.LoadEntities(x => x.DelFlag == 0).DefaultIfEmpty().ToList();
-            if(temp != null && temp[0] != null)
+            if (temp != null && temp[0] != null)
             {
                 List<TabInfo> tiList = new List<TabInfo>();
-                foreach(var a in temp)
+                foreach (var a in temp)
                 {
                     TabInfo ti = new TabInfo();
                     ti.id = a.ID;
@@ -349,9 +350,9 @@ namespace CZBK.ItcastOA.WebApp.Controllers
                     ti.nameStr = a.City_str;
                     tiList.Add(ti);
                 }
-                return Json(new { ret = "ok", rows=tiList }, JsonRequestBehavior.AllowGet);
+                return Json(new { ret = "ok", rows = tiList }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new { ret = "no", msg="数据表中无数据！" }, JsonRequestBehavior.AllowGet);
+            return Json(new { ret = "no", msg = "数据表中无数据！" }, JsonRequestBehavior.AllowGet);
         }
         public ActionResult GetAllZhuangXiuList()
         {
@@ -373,15 +374,15 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         public ActionResult GetKfPhoneNum()
         {
             var adminPhone = GongGaoService.LoadEntities(x => x.Items == 2).FirstOrDefault();
-            if(adminPhone != null)
+            if (adminPhone != null)
             {
                 string phoneNum = adminPhone.text;
                 return Json(new { ret = "ok", phoneNum = phoneNum }, JsonRequestBehavior.AllowGet);
             }
             return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
-        }       
-        
-        
+        }
+
+
         #region 绑定推荐人
         public ActionResult BandPerson()
         {
@@ -393,7 +394,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             else
             {
                 string Person = Request["Person"].Trim();
-                var personlist = T_YxPersonService.LoadEntities(x => x.PersonName == Person&&x.DEL==0).FirstOrDefault();
+                var personlist = T_YxPersonService.LoadEntities(x => x.PersonName == Person && x.DEL == 0).FirstOrDefault();
                 if (personlist != null)
                 {
                     string uid = Request["uid"];
@@ -426,16 +427,16 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         {
             string uid = Request["uid"];
             var iwx = WxUserService.LoadEntities(x => x.Wx_id == uid).FirstOrDefault();
-            if(iwx != null)
+            if (iwx != null)
             {
-                if(iwx.YxPerson_Id != null)
+                if (iwx.YxPerson_Id != null)
                 {
                     return Json(new { ret = "ok", PersonName = iwx.T_YxPerson.PersonName }, JsonRequestBehavior.AllowGet);
-                }else
+                } else
                 {
                     return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
                 }
-            }else
+            } else
             {
                 return Json(new { ret = "no" }, JsonRequestBehavior.AllowGet);
             }
@@ -450,7 +451,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             {
                 if (iwx.ZjOrGr != null)
                 {
-                    return Json(new { ret = "ok", ziOrGr=iwx.ZjOrGr }, JsonRequestBehavior.AllowGet);
+                    return Json(new { ret = "ok", ziOrGr = iwx.ZjOrGr }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
@@ -485,7 +486,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         public ActionResult JianChaSessionID() {
             string Sessionid = Request["sessionId"];
             long ID = Convert.ToInt64(Request["Uid"]);
-            var Uis= UserInfoService.LoadEntities(x => x.ID==ID).FirstOrDefault();
+            var Uis = UserInfoService.LoadEntities(x => x.ID == ID).FirstOrDefault();
             if (Uis != null)
             {
                 if (Uis.Login_now == Sessionid)
@@ -500,10 +501,51 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             else {
                 return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
             }
+
+        }
+        #endregion
+        #region 微信小程序公告
+        public ActionResult updataGG()
+        {
+            var itemid = Convert.ToInt32(Request["item_s"]);
+            var bol = Convert.ToBoolean(Request["bl"]);
+            var GongG = GongGaoService.LoadEntities(x => x.Items == itemid).DefaultIfEmpty();
+            if (!bol) { GongG = GongG.OrderByDescending(x => x.Addtime).Skip(0).Take(5); }          
+            var temp = from a in GongG
+                       select new
+                       {
+                           a.text,
+                           a.Addtime,
+                           a.ID,
+                           a.bak
+                       };            
+            List<Rtupgg> sgg = new List<Rtupgg>();
             
+            foreach (var tm in temp) {
+                Rtupgg rt = new Rtupgg();
+                rt.Addtime = tm.Addtime;
+                rt.Text = tm.text;
+                rt.ID = tm.ID;
+                rt.Bak = tm.bak;
+                var istext= rt.Text.Split(new string[] { "+-" }, StringSplitOptions.None);
+                
+                rt.St = istext.ToList();
+                sgg.Add(rt);
+            }
+
+            return Json(new { ret = sgg }, JsonRequestBehavior.AllowGet);
+
         }
         #endregion
     }
+    public class Rtupgg {
+        public DateTime? Addtime { get; set; }
+        public int ID { get; set; }
+        public string Bak { get; set; }
+        public string Text { get; set; }
+        public List<string> St { get; set; }
+    }
+    
     public class KFinfo
     {
         public string kfPersonName { get; set; }

@@ -95,8 +95,18 @@
     <Compile Include="SearchParam\BaseParam.cs" />
     <Compile Include="SearchParam\seach.cs" />
     <Compile Include="SearchParam\Showimage.cs" />
+    <Compile Include="SearchParam\THvaeLooks.cs" />
     <Compile Include="SearchParam\UserInfoParam.cs" />
     <Compile Include="SeeQzCz.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="THavelook.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="THaveLookBanner.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="THaveLook_image.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="TLoginbak.cs">

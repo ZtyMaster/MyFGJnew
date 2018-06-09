@@ -66,6 +66,12 @@ namespace CZBK.ItcastOA.IDAL
 	
 		IT_ZhuaiJiaBakDal T_ZhuaiJiaBakDal{get;set;}
 	
+		ITHavelookDal THavelookDal{get;set;}
+	
+		ITHaveLook_imageDal THaveLook_imageDal{get;set;}
+	
+		ITHaveLookBannerDal THaveLookBannerDal{get;set;}
+	
 		ITLoginbakDal TLoginbakDal{get;set;}
 	
 		ITtextDal TtextDal{get;set;}

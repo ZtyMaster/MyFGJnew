@@ -392,6 +392,38 @@
           <Property Name="AddUser" Type="int" />
           <Property Name="ADDtime" Type="datetime" />
         </EntityType>
+        <EntityType Name="THavelook">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" Nullable="false" />
+          <Property Name="TopName" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Addtime" Type="datetime" Nullable="false" />
+          <Property Name="Items_ID" Type="int" Nullable="false" />
+          <Property Name="TextValue" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Personname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Photo" Type="nvarchar" MaxLength="12" />
+          <Property Name="CityId" Type="int" />
+          <Property Name="del" Type="int" />
+        </EntityType>
+        <EntityType Name="THaveLook_image">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="del" Type="int" />
+          <Property Name="HaveLook_ID" Type="bigint" Nullable="false" />
+          <Property Name="Str_image" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="THaveLookBanner">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Imagestr" Type="nvarchar" MaxLength="250" />
+          <Property Name="Items" Type="int" />
+          <Property Name="del" Type="int" />
+        </EntityType>
         <EntityType Name="TLoginbak">
           <Key>
             <PropertyRef Name="ID" />
@@ -869,6 +901,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_THaveLook_image_THavelook">
+          <End Role="THavelook" Type="Self.THavelook" Multiplicity="1" />
+          <End Role="THaveLook_image" Type="Self.THaveLook_image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="THavelook">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="THaveLook_image">
+              <PropertyRef Name="HaveLook_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_THavelook_T_City">
+          <End Role="T_City" Type="Self.T_City" Multiplicity="0..1" />
+          <End Role="THavelook" Type="Self.THavelook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_City">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="THavelook">
+              <PropertyRef Name="CityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_THavelook_T_Items">
+          <End Role="T_Items" Type="Self.T_Items" Multiplicity="1" />
+          <End Role="THavelook" Type="Self.THavelook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Items">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="THavelook">
+              <PropertyRef Name="Items_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TLoginbak_UserInfo">
           <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="1" />
           <End Role="TLoginbak" Type="Self.TLoginbak" Multiplicity="*" />
@@ -1103,6 +1171,9 @@
           <EntitySet Name="T_UserSave_Items" EntityType="Self.T_UserSave_Items" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_YxPerson" EntityType="Self.T_YxPerson" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_ZhuaiJiaBak" EntityType="Self.T_ZhuaiJiaBak" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="THavelook" EntityType="Self.THavelook" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="THaveLook_image" EntityType="Self.THaveLook_image" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="THaveLookBanner" EntityType="Self.THaveLookBanner" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TLoginbak" EntityType="Self.TLoginbak" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Ttext" EntityType="Self.Ttext" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TtextImage" EntityType="Self.TtextImage" Schema="dbo" store:Type="Tables" />
@@ -1231,6 +1302,18 @@
           <AssociationSet Name="FK_T_YxPerson_UserInfo" Association="Self.FK_T_YxPerson_UserInfo">
             <End Role="UserInfo" EntitySet="UserInfo" />
             <End Role="T_YxPerson" EntitySet="T_YxPerson" />
+          </AssociationSet>
+          <AssociationSet Name="FK_THaveLook_image_THavelook" Association="Self.FK_THaveLook_image_THavelook">
+            <End Role="THavelook" EntitySet="THavelook" />
+            <End Role="THaveLook_image" EntitySet="THaveLook_image" />
+          </AssociationSet>
+          <AssociationSet Name="FK_THavelook_T_City" Association="Self.FK_THavelook_T_City">
+            <End Role="T_City" EntitySet="T_City" />
+            <End Role="THavelook" EntitySet="THavelook" />
+          </AssociationSet>
+          <AssociationSet Name="FK_THavelook_T_Items" Association="Self.FK_THavelook_T_Items">
+            <End Role="T_Items" EntitySet="T_Items" />
+            <End Role="THavelook" EntitySet="THavelook" />
           </AssociationSet>
           <AssociationSet Name="FK_TLoginbak_UserInfo" Association="Self.FK_TLoginbak_UserInfo">
             <End Role="UserInfo" EntitySet="UserInfo" />
@@ -1520,6 +1603,21 @@
             <End Role="Ttext" EntitySet="Ttexts" />
             <End Role="TtextImage" EntitySet="TtextImages" />
           </AssociationSet>
+          <EntitySet Name="THavelooks" EntityType="OAModel.THavelook" />
+          <EntitySet Name="THaveLook_image" EntityType="OAModel.THaveLook_image" />
+          <AssociationSet Name="FK_THavelook_T_City" Association="OAModel.FK_THavelook_T_City">
+            <End Role="T_City" EntitySet="T_City" />
+            <End Role="THavelook" EntitySet="THavelooks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_THavelook_T_Items" Association="OAModel.FK_THavelook_T_Items">
+            <End Role="T_Items" EntitySet="T_Items" />
+            <End Role="THavelook" EntitySet="THavelooks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_THaveLook_image_THavelook" Association="OAModel.FK_THaveLook_image_THavelook">
+            <End Role="THavelook" EntitySet="THavelooks" />
+            <End Role="THaveLook_image" EntitySet="THaveLook_image" />
+          </AssociationSet>
+          <EntitySet Name="THaveLookBanners" EntityType="OAModel.THaveLookBanner" />
         </EntityContainer>
         <EntityType Name="UserInfo">
           <Key>
@@ -1742,6 +1840,7 @@
           <NavigationProperty Name="T_QiuZhuQiuGou" Relationship="OAModel.FK_T_QiuZhuQiuGou_T_City" FromRole="T_City" ToRole="T_QiuZhuQiuGou" />
           <NavigationProperty Name="T_ChuZhuInfo" Relationship="OAModel.FK_T_CitiID" FromRole="T_City" ToRole="T_ChuZhuInfo" />
           <NavigationProperty Name="T_UpHerfCity" Relationship="OAModel.FK_T_UpHerfCity_T_City" FromRole="T_City" ToRole="T_UpHerfCity" />
+          <NavigationProperty Name="THavelooks" Relationship="OAModel.FK_THavelook_T_City" FromRole="T_City" ToRole="THavelook" />
         </EntityType>
         <EntityType Name="T_Quyu">
           <Key>
@@ -1879,6 +1978,7 @@
           <Property Name="Icons" Type="Int32" Nullable="false" />
           <Property Name="DelFlag" Type="Int16" Nullable="true" />
           <Property Name="Bakstr" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="THavelooks" Relationship="OAModel.FK_THavelook_T_Items" FromRole="T_Items" ToRole="THavelook" />
         </EntityType>
         <Association Name="FK_T_SaveBiaoJi_BiaoJi">
           <End Type="OAModel.T_BiaoJiInfo" Role="T_BiaoJiInfo" Multiplicity="0..1" />
@@ -2606,6 +2706,78 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="THavelook">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" />
+          <Property Name="TopName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Addtime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Items_ID" Type="Int32" Nullable="false" />
+          <Property Name="TextValue" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Personname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Photo" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="CityId" Type="Int32" />
+          <NavigationProperty Name="T_City" Relationship="OAModel.FK_THavelook_T_City" FromRole="THavelook" ToRole="T_City" />
+          <NavigationProperty Name="T_Items" Relationship="OAModel.FK_THavelook_T_Items" FromRole="THavelook" ToRole="T_Items" />
+          <NavigationProperty Name="THaveLook_image" Relationship="OAModel.FK_THaveLook_image_THavelook" FromRole="THavelook" ToRole="THaveLook_image" />
+          <Property Name="del" Type="Int32" />
+        </EntityType>
+        <EntityType Name="THaveLook_image">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="del" Type="Int32" />
+          <Property Name="HaveLook_ID" Type="Int64" Nullable="false" />
+          <Property Name="Str_image" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="THavelook" Relationship="OAModel.FK_THaveLook_image_THavelook" FromRole="THaveLook_image" ToRole="THavelook" />
+        </EntityType>
+        <Association Name="FK_THavelook_T_City">
+          <End Type="OAModel.T_City" Role="T_City" Multiplicity="0..1" />
+          <End Type="OAModel.THavelook" Role="THavelook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_City">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="THavelook">
+              <PropertyRef Name="CityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_THavelook_T_Items">
+          <End Type="OAModel.T_Items" Role="T_Items" Multiplicity="1" />
+          <End Type="OAModel.THavelook" Role="THavelook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Items">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="THavelook">
+              <PropertyRef Name="Items_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_THaveLook_image_THavelook">
+          <End Type="OAModel.THavelook" Role="THavelook" Multiplicity="1" />
+          <End Type="OAModel.THaveLook_image" Role="THaveLook_image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="THavelook">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="THaveLook_image">
+              <PropertyRef Name="HaveLook_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="THaveLookBanner">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Imagestr" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Items" Type="Int32" />
+          <Property Name="del" Type="Int32" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3138,6 +3310,41 @@
               <MappingFragment StoreEntitySet="TtextImage">
                 <ScalarProperty Name="ImageStr" ColumnName="ImageStr" />
                 <ScalarProperty Name="TextID" ColumnName="TextID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="THavelooks">
+            <EntityTypeMapping TypeName="OAModel.THavelook">
+              <MappingFragment StoreEntitySet="THavelook">
+                <ScalarProperty Name="del" ColumnName="del" />
+                <ScalarProperty Name="CityId" ColumnName="CityId" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+                <ScalarProperty Name="Personname" ColumnName="Personname" />
+                <ScalarProperty Name="TextValue" ColumnName="TextValue" />
+                <ScalarProperty Name="Items_ID" ColumnName="Items_ID" />
+                <ScalarProperty Name="Addtime" ColumnName="Addtime" />
+                <ScalarProperty Name="TopName" ColumnName="TopName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="THaveLook_image">
+            <EntityTypeMapping TypeName="OAModel.THaveLook_image">
+              <MappingFragment StoreEntitySet="THaveLook_image">
+                <ScalarProperty Name="Str_image" ColumnName="Str_image" />
+                <ScalarProperty Name="HaveLook_ID" ColumnName="HaveLook_ID" />
+                <ScalarProperty Name="del" ColumnName="del" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="THaveLookBanners">
+            <EntityTypeMapping TypeName="OAModel.THaveLookBanner">
+              <MappingFragment StoreEntitySet="THaveLookBanner">
+                <ScalarProperty Name="del" ColumnName="del" />
+                <ScalarProperty Name="Items" ColumnName="Items" />
+                <ScalarProperty Name="Imagestr" ColumnName="Imagestr" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

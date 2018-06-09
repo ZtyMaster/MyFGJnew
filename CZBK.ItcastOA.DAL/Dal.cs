@@ -146,6 +146,21 @@ namespace CZBK.ItcastOA.DAL
 
     }
 		
+	public partial class THavelookDal :BaseDal<THavelook>,ITHavelookDal
+    {
+
+    }
+		
+	public partial class THaveLook_imageDal :BaseDal<THaveLook_image>,ITHaveLook_imageDal
+    {
+
+    }
+		
+	public partial class THaveLookBannerDal :BaseDal<THaveLookBanner>,ITHaveLookBannerDal
+    {
+
+    }
+		
 	public partial class TLoginbakDal :BaseDal<TLoginbak>,ITLoginbakDal
     {
 

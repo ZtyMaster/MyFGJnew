@@ -12,21 +12,13 @@ namespace CZBK.ItcastOA.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class T_Items
+    public partial class THaveLook_image
     {
-        public T_Items()
-        {
-            this.THavelooks = new HashSet<THavelook>();
-        }
+        public long ID { get; set; }
+        public Nullable<int> del { get; set; }
+        public long HaveLook_ID { get; set; }
+        public string Str_image { get; set; }
     
-        public int ID { get; set; }
-        public Nullable<int> StrID { get; set; }
-        public string Str { get; set; }
-        public string Str_val { get; set; }
-        public int Icons { get; set; }
-        public Nullable<short> DelFlag { get; set; }
-        public string Bakstr { get; set; }
-    
-        public virtual ICollection<THavelook> THavelooks { get; set; }
+        public virtual THavelook THavelook { get; set; }
     }
 }

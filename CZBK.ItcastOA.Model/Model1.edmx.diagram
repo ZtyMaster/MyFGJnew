@@ -85,6 +85,12 @@
         <AssociationConnector Association="OAModel.FK_Ttext_user" />
         <EntityTypeShape EntityType="OAModel.TtextImage" Width="1.5" PointX="6.25" PointY="42.441019694010421" />
         <AssociationConnector Association="OAModel.FK_TtextImage_Ttext" />
+        <EntityTypeShape EntityType="OAModel.THavelook" Width="1.5" PointX="20.1250005" PointY="15.182088216145836" />
+        <EntityTypeShape EntityType="OAModel.THaveLook_image" Width="1.5" PointX="22.3750005" PointY="15.736470540364582" />
+        <AssociationConnector Association="OAModel.FK_THavelook_T_City" />
+        <AssociationConnector Association="OAModel.FK_THavelook_T_Items" />
+        <AssociationConnector Association="OAModel.FK_THaveLook_image_THavelook" />
+        <EntityTypeShape EntityType="OAModel.THaveLookBanner" Width="1.5" PointX="4.375" PointY="0.75" />
         
       </Diagram>
     </edmx:Diagrams>

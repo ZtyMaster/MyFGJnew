@@ -23,6 +23,7 @@ namespace CZBK.ItcastOA.Model
             this.T_QiuZhuQiuGou = new HashSet<T_QiuZhuQiuGou>();
             this.T_ChuZhuInfo = new HashSet<T_ChuZhuInfo>();
             this.T_UpHerfCity = new HashSet<T_UpHerfCity>();
+            this.THavelooks = new HashSet<THavelook>();
         }
     
         public int ID { get; set; }
@@ -40,5 +41,6 @@ namespace CZBK.ItcastOA.Model
         public virtual ICollection<T_QiuZhuQiuGou> T_QiuZhuQiuGou { get; set; }
         public virtual ICollection<T_ChuZhuInfo> T_ChuZhuInfo { get; set; }
         public virtual ICollection<T_UpHerfCity> T_UpHerfCity { get; set; }
+        public virtual ICollection<THavelook> THavelooks { get; set; }
     }
 }

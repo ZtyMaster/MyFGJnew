@@ -145,6 +145,16 @@ namespace CZBK.ItcastOA.IDAL
       
     }
 	
+	public partial interface ITHavelookDal :IBaseDal<THavelook>
+    {
+      
+    }
+	
+	public partial interface ITHaveLook_imageDal :IBaseDal<THaveLook_image>
+    {
+      
+    }
+	
 	public partial interface ITLoginbakDal :IBaseDal<TLoginbak>
     {
       

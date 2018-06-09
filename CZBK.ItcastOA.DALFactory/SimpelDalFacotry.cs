@@ -367,6 +367,32 @@ namespace CZBK.ItcastOA.DALFactory
             return obj as IT_ZhuaiJiaBakDal;
         }
 		
+	    public static ITHavelookDal CreateTHavelookDal()
+        {
+
+            string classFulleName = ConfigurationManager.AppSettings["NameSpace"] + ".THavelookDal";
+
+
+            //object obj = Assembly.Load(ConfigurationManager.AppSettings["DalAssembly"]).CreateInstance(classFulleName, true);
+            var obj  = CreateInstance(ConfigurationManager.AppSettings["DalAssemblyPath"], classFulleName);
+
+
+            return obj as ITHavelookDal;
+        }
+		
+	    public static ITHaveLook_imageDal CreateTHaveLook_imageDal()
+        {
+
+            string classFulleName = ConfigurationManager.AppSettings["NameSpace"] + ".THaveLook_imageDal";
+
+
+            //object obj = Assembly.Load(ConfigurationManager.AppSettings["DalAssembly"]).CreateInstance(classFulleName, true);
+            var obj  = CreateInstance(ConfigurationManager.AppSettings["DalAssemblyPath"], classFulleName);
+
+
+            return obj as ITHaveLook_imageDal;
+        }
+		
 	    public static ITLoginbakDal CreateTLoginbakDal()
         {
 

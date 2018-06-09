@@ -59,5 +59,7 @@ namespace CZBK.ItcastOA.Model
         public DbSet<WxUser> WxUsers { get; set; }
         public DbSet<Ttext> Ttexts { get; set; }
         public DbSet<TtextImage> TtextImages { get; set; }
+        public DbSet<THavelook> THavelooks { get; set; }
+        public DbSet<THaveLook_image> THaveLook_image { get; set; }
     }
 }

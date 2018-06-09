@@ -420,6 +420,36 @@ namespace CZBK.ItcastOA.DALFactory
             set { _T_ZhuaiJiaBakDal = value; }
         }
 	
+		private ITHavelookDal _THavelookDal;
+        public ITHavelookDal THavelookDal
+        {
+            get
+            {
+                if(_THavelookDal == null)
+                {
+                   // _THavelookDal = new THavelookDal();
+				    _THavelookDal =AbstractFactory.CreateTHavelookDal();
+                }
+                return _THavelookDal;
+            }
+            set { _THavelookDal = value; }
+        }
+	
+		private ITHaveLook_imageDal _THaveLook_imageDal;
+        public ITHaveLook_imageDal THaveLook_imageDal
+        {
+            get
+            {
+                if(_THaveLook_imageDal == null)
+                {
+                   // _THaveLook_imageDal = new THaveLook_imageDal();
+				    _THaveLook_imageDal =AbstractFactory.CreateTHaveLook_imageDal();
+                }
+                return _THaveLook_imageDal;
+            }
+            set { _THaveLook_imageDal = value; }
+        }
+	
 		private ITLoginbakDal _TLoginbakDal;
         public ITLoginbakDal TLoginbakDal
         {

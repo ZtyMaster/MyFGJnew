@@ -63,5 +63,8 @@
   </object>
   <object type="CZBK.ItcastOA.BLL.TtextImageService, CZBK.ItcastOA.BLL" singleton="false" name="TtextImageService" >
   </object>
-  
+  <object type="CZBK.ItcastOA.BLL.THaveLook_imageService, CZBK.ItcastOA.BLL" singleton="false" name="THaveLook_imageService" >
+  </object>
+  <object type="CZBK.ItcastOA.BLL.THavelookService, CZBK.ItcastOA.BLL" singleton="false" name="THavelookService" >
+  </object>
 </objects>

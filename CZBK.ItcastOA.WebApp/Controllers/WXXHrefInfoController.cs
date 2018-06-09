@@ -2,6 +2,7 @@
 using CZBK.ItcastOA.Model.SearchParam;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -34,6 +35,8 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         IBLL.IT_YxPersonService T_YxPersonService { set; get; }
 
         IBLL.IWxUserService WxUserService { get; set; }
+        IBLL.ITHaveLook_imageService THaveLook_imageService { get; set; }
+        IBLL.ITHavelookService THavelookService { get; set; }
 
         public ActionResult Index()
         {
@@ -535,6 +538,138 @@ namespace CZBK.ItcastOA.WebApp.Controllers
 
             return Json(new { ret = sgg }, JsonRequestBehavior.AllowGet);
 
+        }
+        #endregion
+        #region 看看数据处理
+        //软删除
+        public ActionResult RuanDel() {
+
+            long ID = Convert.ToInt64(Request["ID"]);
+            var temp = THavelookService.LoadEntities(x => x.ID == ID).FirstOrDefault();
+            temp.del = 1;
+            if (THavelookService.EditEntity(temp)) {
+                return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { ret = "删除失败！" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        //删除看看图片
+        public ActionResult DelHaveLook()
+        {
+            long HavelookID = Convert.ToInt64(Request["HavelookID"]);
+
+            try
+            {
+                var dtt = THaveLook_imageService.LoadEntities(x => x.HaveLook_ID == HavelookID).DefaultIfEmpty();
+                if (dtt.ToList().Count > 0)
+                {
+                    if (dtt.ToList()[0] != null)
+                    {
+                        foreach (var tts in dtt)
+                        {
+                            // return Json(new { ret = Directory.Exists(Path.GetDirectoryName(Request.MapPath(tts.ImageStr))), ss = Request.MapPath(tts.ImageStr) }, JsonRequestBehavior.AllowGet);
+                            if (Directory.Exists(Path.GetDirectoryName(Request.MapPath(tts.Str_image))))
+                            {
+                                System.IO.File.Delete(Request.MapPath(tts.Str_image));
+                            }
+                        }
+                    }
+
+                }
+                // return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+                if (THaveLook_imageService.THavelookDelImage(HavelookID))
+                {
+                    return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { ret = "删除失败！" }, JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            catch (Exception e)
+            {
+                return Json(new { ret = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        //记事本数据操作
+        public ActionResult AddHaveLook(THavelook tt)
+        {
+            if (tt.ID > 0)
+            {
+                var ThisTT = THavelookService.LoadEntities(x => x.ID == tt.ID).FirstOrDefault();
+                ThisTT.TextValue = tt.TextValue;
+                ThisTT.TopName = tt.TopName;
+                ThisTT.Photo = tt.Photo;
+                ThisTT.Items_ID = tt.Items_ID;
+                ThisTT.Personname = tt.Personname;
+                if (THavelookService.EditEntity(ThisTT))
+                {
+                    return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { ret = "修改数据出现错误！" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                tt.Addtime = DateTime.Now;
+                try
+                {
+                    var temp = THavelookService.AddEntity(tt);
+                    return Json(new { ret = "ok", id = temp.ID }, JsonRequestBehavior.AllowGet);
+                }
+                catch
+                {
+                    return Json(new { ret = "新增数据出现错误！" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+        }
+        //上传记事本图片
+        public ActionResult AddHavelookFlie(HttpPostedFileWrapper file)
+        {
+            var ID = Request["IDs"];
+            try
+            {
+
+                string filename = Path.GetFileName(file.FileName);//获取上传的文件名
+                string fileExt = Path.GetExtension(filename);//获取扩展名  
+                string dir = "/HaveLookSaveImage/" + MvcApplication.GetT_time().ToString("yyyy-MM-dd") + "/";
+                Directory.CreateDirectory(Path.GetDirectoryName(Request.MapPath(dir)));
+                string filenewName = Guid.NewGuid().ToString();
+                string fulldir = dir + filenewName + fileExt;
+                file.SaveAs(Request.MapPath(fulldir));
+
+
+                THaveLook_image Tige = new THaveLook_image();
+                Tige.HaveLook_ID = Convert.ToInt64(ID);
+                Tige.Str_image = fulldir;
+                Tige.del = 0;
+                THaveLook_imageService.AddEntity(Tige);
+                return Json(new { ret = "ok", id = ID }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception e)
+            {
+                return Json(new { ret = e.Message, id = ID }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        //获取技术部数据
+        public ActionResult LoadTtext()
+        {
+            int pageIdex = Request["page"] != null ? int.Parse(Request["page"]) : 1;
+            int pageSize = Request["rows"] != null ? int.Parse(Request["rows"]) : 35;
+            int city = Request["cityid"] != null ? int.Parse(Request["cityid"]) : 0;
+            int itemid = Request["itemid"] != null ? int.Parse(Request["itemid"]) : 0;
+            var val = Request["val"];
+            int totalcount = int.MaxValue;
+            var temp= THavelookService.LoadSearchEntities(new UserInfoParam() { PageIndex = pageIdex, PageSize = pageSize, CityID = city, C_id = itemid, Str = val, TotalCount = totalcount });
+            
+            return Json(new { rows = temp, total = totalcount }, JsonRequestBehavior.AllowGet);
         }
         #endregion
     }

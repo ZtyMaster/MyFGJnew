@@ -169,7 +169,8 @@
     <property name="T_QuyuService" ref="T_QuyuService" />
     <property name="T_YxPersonService" ref="T_YxPersonService" />
     <property name="WxUserService" ref="WxUserService" />
-    
+    <property name="THaveLook_imageService" ref="THaveLook_imageService" />
+    <property name="THavelookService" ref="THavelookService" />
 
   </object>
   <!--intentionally do NOT register the AccountController or the ValuesController with the container; demonstrates that the underlying

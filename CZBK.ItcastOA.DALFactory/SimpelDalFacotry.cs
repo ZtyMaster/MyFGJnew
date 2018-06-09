@@ -393,6 +393,19 @@ namespace CZBK.ItcastOA.DALFactory
             return obj as ITHaveLook_imageDal;
         }
 		
+	    public static ITHaveLookBannerDal CreateTHaveLookBannerDal()
+        {
+
+            string classFulleName = ConfigurationManager.AppSettings["NameSpace"] + ".THaveLookBannerDal";
+
+
+            //object obj = Assembly.Load(ConfigurationManager.AppSettings["DalAssembly"]).CreateInstance(classFulleName, true);
+            var obj  = CreateInstance(ConfigurationManager.AppSettings["DalAssemblyPath"], classFulleName);
+
+
+            return obj as ITHaveLookBannerDal;
+        }
+		
 	    public static ITLoginbakDal CreateTLoginbakDal()
         {
 

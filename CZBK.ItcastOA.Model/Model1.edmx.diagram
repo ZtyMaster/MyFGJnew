@@ -90,6 +90,7 @@
         <AssociationConnector Association="OAModel.FK_THavelook_T_City" />
         <AssociationConnector Association="OAModel.FK_THavelook_T_Items" />
         <AssociationConnector Association="OAModel.FK_THaveLook_image_THavelook" />
+        <EntityTypeShape EntityType="OAModel.THaveLookBanner" Width="1.5" PointX="4.375" PointY="0.75" />
         
       </Diagram>
     </edmx:Diagrams>

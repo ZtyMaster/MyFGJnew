@@ -61,5 +61,6 @@ namespace CZBK.ItcastOA.Model
         public DbSet<TtextImage> TtextImages { get; set; }
         public DbSet<THavelook> THavelooks { get; set; }
         public DbSet<THaveLook_image> THaveLook_image { get; set; }
+        public DbSet<THaveLookBanner> THaveLookBanners { get; set; }
     }
 }

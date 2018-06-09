@@ -68,7 +68,7 @@
 
             //datagrid数据表格ID
             var datagridId = 'tt';
-            
+            bindFileUpclick();
             // 当窗口大小发生变化时，调整DataGrid的大小
             $(window).resize(function () {
 
@@ -79,6 +79,7 @@
             };
             loadData(pars);
             $("#addDiv").css("display", "none");
+            $("#addHaveBannerDiv").css("display", "none");            
             $("#editDiv").css("display", "none");
             $("#editpwd").css("display", "none");
             $("#addYYYDiv").css("display", "none");            
@@ -114,6 +115,9 @@
             })
             $("#FBsh").click(function () {
                 fbsh_void();
+            })
+            $("#HaveLook").click(function () {
+                HaveLook_void();
             })
             $("#Bjlb").click(function () {
                 var pars = {
@@ -346,6 +350,76 @@
 
                 ]],
                 toolbar: '#tb',
+                onLoadSuccess: function () {
+
+                }
+            });
+        }
+        //微信看看banner
+        function HaveLook_void(pars) {
+            $(".datagrid-toolbar").hide();
+            $('#tt').datagrid({
+                url: '/WXXHrefinfo/LoadHaveLookBanner',
+                title: '微信看看Banner',
+                width: $(document.body).width(),
+                height: $(document).height(),
+                fitColumns: true, //列自适应
+                nowrap: true,//则把数据显示在一行里。
+                idField: 'ID',//主键列的列明
+                fit: true,
+                loadMsg: '正在加载权限的信息...',
+                pagination: true,//是否有分页
+                singleSelect: true,//是否单行选择
+                pageSize: 35,//页大小，一页多少条数据
+                pageNumber: 1,//当前页，默认的
+                pageList: [15, 25, 35],
+                pagePosition: "bottom",//定义分页栏的位置。
+                queryParams: pars,//往后台传递参数
+                columns: [[//c.UserName, c.UserPass, c.Email, c.RegTime
+                    {
+                        field: 'Imagestr', title: '图片', align: 'center', width: 30,
+                        formatter: function (value, row, index) {
+                            var bj = "";
+                            if (value == "有") { bj = "<img src='/Content/Images/nf/32px.png' height='25'  />"; }
+                            return bj;
+                        }
+                    },
+                    { field: 'Items', title: '序列', width: 80, align: 'center' },
+                    { field: 'del', title: '删除标记', width: 60, align: 'center' },
+                    {
+                        field: 'Operator', title: '操作', halign: 'center',
+                        formatter: function (value, row, index) {
+                            var str = "&nbsp&nbsp<a href='javascript: shsyl(0)' ids='" + row.ID +
+                                "'class='l-btn' style='padding:2px 6px' >通过审核</a>";
+                            str = str + " &nbsp&nbsp<a href='javascript:shsyl(1)' ids='" + row.id +
+                                "'class='l-btn' style='padding:2px 6px' >审核失败</a>";
+                            str = str + " &nbsp&nbsp<a href='javascript:shsyl(2)' ids='" + row.id +
+                                "'class='l-btn' style='padding:2px 6px' >删除</a>";
+                            return str;
+                        }
+                    }
+
+                ]],
+                toolbar: [{
+                    id: 'btnDelete',
+                    text: '删除',
+                    iconCls: 'icon-remove',
+                    handler: function () {
+                    }
+                }, {
+                    id: 'btnAdd',
+                    text: '添加',
+                    iconCls: 'icon-add',
+                    handler: function () {
+                        addHaveLookInfo();
+                    }
+                }, {
+                    id: 'btnEdit',
+                    text: '编辑',
+                    iconCls: 'icon-edit',
+                    handler: function () {
+                    }
+                }],
                 onLoadSuccess: function () {
 
                 }
@@ -980,12 +1054,43 @@
                     }
                 }]
             });
-          }
+        }
+        //添加banner信息
+        function addHaveLookInfo() {
+            $("#addHaveBannerDiv").css("display", "block");
+            $('#addHaveBannerDiv').dialog({
+                title: "添加Banner信息",
+                width: 440,
+                height: 300,
+                collapsible: true,
+                resizable: true,
+                modal: true,
+                buttons: [{
+                    text: '确定',
+                    iconCls: 'icon-ok',
+                    handler: function () {
+                        if ($("#hiddenMenuIcon").val().trim().length <= 0) {
+                            $.message.alert("提示", "没有上传图片！");
+                            return;
+                        }
+                        $("#addFormHaveLookBanner").submit();//提交表单
+                        
+                    }
+                }, {
+                    text: '取消',
+                    handler: function () {
+                        $('#addHaveBannerDiv').dialog('close');
+                    }
+                }]
+            });
+        }
         //添加完成以后调用该方法
         function afterAdd(data) {
             if (data == "ok") {
                 $("#addForm input").val("");
                 $('#addDiv').dialog('close');
+                $('#addHaveBannerDiv').dialog('close');
+                alert(1)
                 $('#XTgonggao').window('close')
                 $('#tt').datagrid('reload');
             } else {
@@ -1039,7 +1144,6 @@
         function ChangeDateFormat(cellval) {
 
             var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
-            alert(date)
             var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
             var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
             return date.getFullYear() + "-" + month + "-" + currentDate;
@@ -1303,7 +1407,6 @@
         }
         //审核信息跳转
         function shtz(p) {
-            alert(p)
             if (p == 99) {
                 pars = {dff:""}
                 fbsh_void(pars)
@@ -1312,6 +1415,32 @@
                 fbsh_void(pars)
             }
             
+        }
+        //文件上传
+        function bindFileUpclick() {
+            $("#btnFileUp").click(function () {
+                if ($("#fileUp").val() == "") {
+                    $.messager.alert("提示", "请选择上传文件", "errer");
+                    return;
+                }
+                alert(1)
+                //开始进行异步上传图片文件
+                $("#addFormHLB").ajaxSubmit({
+                    success: function (data) {
+                        alert(data)
+                        var serverData = data.split(":");
+                        if (serverData[0] == "yes") {
+                            $("#showImage").append("<img src='" + serverData[1] + "' width='40px' height='40px'/>");
+                            $("#hiddenMenuIcon").val(serverData[1]);//将上传成功的图片地址放在隐藏input中
+                        }
+                        else {
+                            $.messager.alert("提示", serverData[1], "errer");
+                        }
+                    },
+                    url: "/WXXHrefInfo/AddHavelookBannerFlie",
+                    type: "post"
+                })
+            });
         }
     </script>
 
@@ -1323,9 +1452,10 @@
         <a href="#" class="easyui-linkbutton" data-options="toggle:true,group:'g1'" id="MinApp">微信账号绑定</a>
         <a href="#" class="easyui-linkbutton" data-options="toggle:true,group:'g1'" id="SetGonggao">发布公告</a>
         <a href="#" class="easyui-linkbutton" data-options="toggle:true,group:'g1'" id="FBsh">发布审核</a>
+        <a href="#" class="easyui-linkbutton" data-options="toggle:true,group:'g1'" id="HaveLook">看看设置</a>
         <a href="#" class="easyui-linkbutton" data-options="toggle:true,group:'g1'" id="loginuser">历史登陆信息</a>
     </div>
-    <div data-options="region:'center',title:'数据报表'" id="dgdiv">        
+    <div data-options="region:'center',title:'数据报表'" id="dgdiv">
         <table id="tt" style="overflow-x:hidden; overflow-y:hidden; margin:0px; padding:0px;" title="标题，可以使用代码进行初始化，也可以使用这种属性的方式" iconcls="icon-edit">
             <thead data-options="frozen:true">
                 <tr>
@@ -1337,48 +1467,48 @@
         <!---------------微信绑定账号--------------------->
         <div id="Wxband" class="easyui-window" data-options="title:'微信绑定系统账号',inline:true" style="width:350px;height:240px;padding:10px">
             <div>请选择要绑定的账号</div>
-            <input  type="hidden" value="" id="WxIDipt" />
-            
-                
-                <div class="easyui-panel" style="padding:10px; width:300px; ">
-                    <input class="easyui-combobox"
-                           name="WxUserId"
-                           id="LoadWxUid"
-                           data-options="url:'/UserInfo/GetNotBandWxUser',
+            <input type="hidden" value="" id="WxIDipt" />
+
+
+            <div class="easyui-panel" style="padding:10px; width:300px; ">
+                <input class="easyui-combobox"
+                       name="WxUserId"
+                       id="LoadWxUid"
+                       data-options="url:'/UserInfo/GetNotBandWxUser',
                    method:'POST',
                    valueField:'id',
                    textField:'text',
                    panelHeight:'200'">
-                    <br />
-                    <div  style="margin-top:5px">
-                        <a href="#" class="easyui-linkbutton" name="rdogt"  data-options="toggle:true,group:'g2',selected:true">中介用户</a>
-                        <a href="#" class="easyui-linkbutton" name="rdogt" data-options="toggle:true,group:'g2'">个人用户</a>
-                    </div>
-                    
-                    <br />
-                   
+                <br />
+                <div style="margin-top:5px">
+                    <a href="#" class="easyui-linkbutton" name="rdogt" data-options="toggle:true,group:'g2',selected:true">中介用户</a>
+                    <a href="#" class="easyui-linkbutton" name="rdogt" data-options="toggle:true,group:'g2'">个人用户</a>
                 </div>
-            <div style="text-align:right"><button style="margin:15px" onclick="Bangdingid(true)">确认绑定</button></div>
-              
+
+                <br />
+
             </div>
+            <div style="text-align:right"><button style="margin:15px" onclick="Bangdingid(true)">确认绑定</button></div>
+
+        </div>
 
 
         <div id="WxSchecr" class="easyui-window" data-options="title:'微信绑定系统账号',inline:true" style="width:250px;height:150px;padding:10px">
             <div>请输入要查询的名称</div>
-            <input type="text" style="width:auto" value=""  id="WxScher" />  
-            <div style="text-align:right"><button style="margin:15px" onclick="onkscher()">确认</button></div>          
+            <input type="text" style="width:auto" value="" id="WxScher" />
+            <div style="text-align:right"><button style="margin:15px" onclick="onkscher()">确认</button></div>
         </div>
 
 
         <div id="XTgonggao" class="easyui-window" data-options="title:'创建系统公告',inline:true" style="width:650px;height:350px;padding:10px">
-          @using (Ajax.BeginForm("AddUpGonggao", "UserInfo", new { }, new AjaxOptions() { HttpMethod = "post", OnSuccess = "afterAddshow" }, new { id = "addFormGg" }))
-          {
+            @using (Ajax.BeginForm("AddUpGonggao", "UserInfo", new { }, new AjaxOptions() { HttpMethod = "post", OnSuccess = "afterAddshow" }, new { id = "addFormGg" }))
+            {
 
-                        <textarea rows="3" style="width:400px;" id="v_content" name="text" class="easyui-validatebox" data-options="required:true,validType:'length[1,1000000]'" invalidMessage="最大长度不能超过1000000"></textarea>
-                        <input type="hidden" name="ID"  id="GGid" value="0"  />
-                        <input type="hidden" name="bl" id="GGbl" value="fales" />
-              
-          }
+                <textarea rows="3" style="width:400px;" id="v_content" name="text" class="easyui-validatebox" data-options="required:true,validType:'length[1,1000000]'" invalidMessage="最大长度不能超过1000000"></textarea>
+                <input type="hidden" name="ID" id="GGid" value="0" />
+                <input type="hidden" name="bl" id="GGbl" value="fales" />
+
+            }
             <div style="text-align:right"><button style="margin:15px" onclick="addGongGao(true)">确认绑定</button></div>
         </div>
     </div>
@@ -1386,14 +1516,14 @@
     <!---------------修改用户信息结束--------------------->
     <!-------------------设置用户的角色------------------>
     <div id="setRoleDiv">
-        <iframe id="setRoleFrame"  frameborder="0"   height="0" ></iframe>
+        <iframe id="setRoleFrame" frameborder="0" height="0"></iframe>
     </div>
 
     <!-------------------设置用户的角色结束------------------>
     <div id="SetUserActionDIV">
-        <iframe id="SetUserActionFrame" frameborder="0"  height="0"></iframe>
+        <iframe id="SetUserActionFrame" frameborder="0" height="0"></iframe>
     </div>
-  
+
     <!---------------添加用户信息--------------------->
     <div id="addDiv">
         @using (Ajax.BeginForm("AddUserInfo", "UserInfo", new { }, new AjaxOptions() { HttpMethod = "post", OnSuccess = "afterAdd" }, new { id = "addForm" }))
@@ -1402,7 +1532,7 @@
                 <tr><td>用户名</td><td><input type="text" name="UName" class="easyui-validatebox" data-options="required:true" /></td></tr>
                 <tr><td>密码</td><td><input type="password" id="pwd" name="UPwd" value="123456" class="easyui-validatebox" data-options="required:true" /></td></tr>
                 <tr><td>重复密码</td><td><input type="password" id="rpwd" value="123456" class="easyui-validatebox" data-options="required:true" /></td></tr>
-               
+
                 <tr><td>小号数量</td><td><input type="text" name="UserXiaoHao" class="easyui-validatebox" data-options="required:true" onkeyup='this.value=this.value.replace(/\D/gi,"")' /></td></tr>
                 <tr><td>查询次数</td><td><input type="text" name="Click" class="easyui-validatebox" data-options="required:true" onkeyup='this.value=this.value.replace(/\D/gi,"")' /></td></tr>
                 <tr><td>到期日期</td><td><input type="text" name="OverTime" class="easyui-datebox" required="required" /></td></tr>
@@ -1415,73 +1545,98 @@
                                 {
                                     <option value="@Item.ID">@Item.City</option>
                                 }
-                                
+
                             }
                         </select>
                     </td>
                 </tr>
-                <tr><td>购买金额</td><td><input type="text" name="Umoney" class="easyui-validatebox" required="required" onkeyup="num(this)"/></td></tr>
-                <tr><td>营销员</td><td><select name="YxPersonID">
-                          @{
-                              foreach (T_YxPerson Item in ViewBag.YYY)
-                              {
-                                  <option value="@Item.ID">@Item.PersonName</option>
-                              }
-                        
-                          }
-</select></td></tr>
+                <tr><td>购买金额</td><td><input type="text" name="Umoney" class="easyui-validatebox" required="required" onkeyup="num(this)" /></td></tr>
+                <tr>
+                    <td>营销员</td>
+                    <td>
+                        <select name="YxPersonID">
+                            @{
+                                foreach (T_YxPerson Item in ViewBag.YYY)
+                                {
+                                    <option value="@Item.ID">@Item.PersonName</option>
+                                }
+
+                            }
+                        </select>
+                    </td>
+                </tr>
                 <tr><td>购买人</td><td><input type="text" name="khName" class="easyui-validatebox" required="required" /></td></tr>
                 <tr><td>联系方式</td><td><input type="text" name="KhPhoto" class="easyui-validatebox" required="required" /></td></tr>
-               
+
                 <tr><td>备注</td><td><textarea rows="5" type="text" name="Remark" class="easyui-validatebox" data-options="required:true"></textarea></td></tr>
             </table>
-                                }
+        }
     </div>
     <!---------------添加用户信息结束--------------------->
+    <!---------------添加微信看看信息--------------------->
+    <div id="addHaveBannerDiv">
+        @using (Ajax.BeginForm("AddHaveLookBanner", "WXXHrefinfo", new { }, new AjaxOptions() { HttpMethod = "post", OnSuccess = "afterAdd" }, new { id = "addFormHLB" }))
+        {
+            <input type="hidden" name="del" class="easyui-validatebox" value="1" data-options="required:true" />
+            <table>
+                <tr><td>图片</td><td>
+    <input type="file" name="fileIconUp" id="fileUp" />
+    <input type="button" value="上传图片" id="btnFileUp" />
+    <input type="hidden" name="Imagestr" id="hiddenMenuIcon" />
+    <div id="showImage"></div>
+</td></tr>             
+
+                <tr><td>序列</td><td><input type="text" name="Items" value="0"  onkeyup="num(this)" /></td></tr>
+                   
+            </table>
+        }
+    </div>
+    <!---------------添加微信看看信息结束--------------------->
     <!---------------修改用户信息--------------------->
     <div id="editDiv">
         @using (Ajax.BeginForm("EditUserInfo", "UserInfo", new { }, new AjaxOptions() { HttpMethod = "post", OnSuccess = "afterEdit" }, new { id = "editForm" }))
         {
-        <input type="hidden"  name="SubTime"  id="txtSubTime" />
-        <input type="hidden"  name="ModifiedOn" id="txtModifiedOn" />
-        <input type="hidden" name="DelFlag" id="txtDelFlag" />
-        <input type="hidden" name="ThisMastr" id="txtThisMastr" />
-        <input type="hidden" name="MasterID" id="txtMasterID" />
-        <input type="hidden" name="Login_now" id="txtLogin_now" />
+            <input type="hidden" name="SubTime" id="txtSubTime" />
+            <input type="hidden" name="ModifiedOn" id="txtModifiedOn" />
+            <input type="hidden" name="DelFlag" id="txtDelFlag" />
+            <input type="hidden" name="ThisMastr" id="txtThisMastr" />
+            <input type="hidden" name="MasterID" id="txtMasterID" />
+            <input type="hidden" name="Login_now" id="txtLogin_now" />
 
-        <input type="hidden" name="ID" id="txtId" />
-        <table>
-            <tr><td>用户名</td><td><input type="text" name="UName" id="txtUName" readonly="readonly"  data-options="required:true" /></td></tr>           
-            <tr><td>备注</td><td><input type="text" name="Remark" id="txtRemark"  data-options="required:true" /></td></tr>
-            <tr><td>排序</td><td><input type="text" name="Sort" id="txtSort"  data-options="required:true" /></td></tr>
-            <tr>
-                <td>使用期限</td>
-                <td>
-                    <input type="text" class="easyui-datetimebox" required name="OverTime" id="txtOverTime" />
+            <input type="hidden" name="ID" id="txtId" />
+            <table>
+                <tr><td>用户名</td><td><input type="text" name="UName" id="txtUName" readonly="readonly" data-options="required:true" /></td></tr>
+                <tr><td>备注</td><td><input type="text" name="Remark" id="txtRemark" data-options="required:true" /></td></tr>
+                <tr><td>排序</td><td><input type="text" name="Sort" id="txtSort" data-options="required:true" /></td></tr>
+                <tr>
+                    <td>使用期限</td>
+                    <td>
+                        <input type="text" class="easyui-datetimebox" required name="OverTime" id="txtOverTime" />
 
-                </td>
-            </tr>
-            <tr><td>小号数量</td><td><input type="text" name="UserXiaoHao" id="txtUserXiaoHao"  data-options="required:true" onkeyup='this.value=this.value.replace(/\D/gi,"")' /></td></tr>
-            <tr><td>点击次数</td><td><input type="text" name="Click" id="txtClick"  data-options="required:true" onkeyup='this.value=this.value.replace(/\D/gi,"")' /></td></tr>
-            <tr><td>归属区域  </td>
-            <td>
-                <select name="CityID" >
-                    @{
-                        foreach (T_City Item in ViewBag.City)
-                        {
-                                <option value="@Item.ID">@Item.City</option>
-                        }
+                    </td>
+                </tr>
+                <tr><td>小号数量</td><td><input type="text" name="UserXiaoHao" id="txtUserXiaoHao" data-options="required:true" onkeyup='this.value=this.value.replace(/\D/gi,"")' /></td></tr>
+                <tr><td>点击次数</td><td><input type="text" name="Click" id="txtClick" data-options="required:true" onkeyup='this.value=this.value.replace(/\D/gi,"")' /></td></tr>
+                <tr>
+                    <td>归属区域  </td>
+                    <td>
+                        <select name="CityID">
+                            @{
+                                foreach (T_City Item in ViewBag.City)
+                                {
+                                    <option value="@Item.ID">@Item.City</option>
+                                }
 
-                    }
-                </select>
+                            }
+                        </select>
 
-            </td>
-            </tr>
-            @*<tr><td>主从权限</td><td>
-                <input type="text" name="ThisMastr" id="txtThisMastr" class="easyui-validatebox" data-options="required:true" />
-                </td></tr>
-            <tr><td>主号ID</td><td><input type="text" name="MasterID" id="txtMasterID" /></td></tr>*@
-        </table>
+                    </td>
+                </tr>
+                @*<tr><td>主从权限</td><td>
+                        <input type="text" name="ThisMastr" id="txtThisMastr" class="easyui-validatebox" data-options="required:true" />
+                        </td></tr>
+                    <tr><td>主号ID</td><td><input type="text" name="MasterID" id="txtMasterID" /></td></tr>*@
+            </table>
         }
     </div>
 
@@ -1492,7 +1647,7 @@
             <table>
                 <tr><td>用户名</td><td><input type="text" name="UName" id="editname" readonly="readonly" /></td></tr>
                 <tr><td>密码</td><td><input type="password" name="UPwd" id="pwd2" value="" class="easyui-validatebox" data-options="required:true" /></td></tr>
-                <tr><td>重复密码</td><td><input type="password" id="rpwd2" value="" class="easyui-validatebox" data-options="required:true" /></td></tr>                
+                <tr><td>重复密码</td><td><input type="password" id="rpwd2" value="" class="easyui-validatebox" data-options="required:true" /></td></tr>
             </table>
         }
     </div>
@@ -1501,20 +1656,24 @@
     <div id="addYYYDiv">
         @using (Ajax.BeginForm("NewAddListYXY", "UserInfo", new { }, new AjaxOptions() { HttpMethod = "post", OnSuccess = "afterAddYYY" }, new { id = "addYYYForm" }))
         {<input type="hidden" name="Sort" class="easyui-validatebox" value="1" data-options="required:true" />
-        <input type="hidden" name="ID" id="edityyyid" class="easyui-validatebox" value="1" data-options="required:true" />
-        <table>
-            <tr><td>姓名</td><td><input type="text" name="PersonName" id="PersonName" class="easyui-validatebox"  /></td></tr>
-            <tr><td>年龄</td><td><input type="text" name="age" id="yyyage" class="easyui-validatebox" onkeyup='this.value=this.value.replace(/\D/gi,"")' /></td></tr>
-            <tr><td>性别</td><td><select class="easyui-combobox" name="Gender" id="sexyyy">
-                                 <option value="0">男</option>
-                                   <option value="1">女</option>
-                                 </select>
-                    </td></tr>
-            <tr><td>住址</td><td><input type="text" name="Addess" id="Addess" class="easyui-validatebox"  /></td></tr>
-            <tr><td>联系电话</td><td><input type="text" name="Photo" id="Photo" class="easyui-validatebox"  /></td></tr> 
-            <tr><td>入厂时间</td><td><input type="text" name="RuzTime" id="RuzTime" class="easyui-datebox"  /></td></tr> 
-        </table>
-                            }
+            <input type="hidden" name="ID" id="edityyyid" class="easyui-validatebox" value="1" data-options="required:true" />
+            <table>
+                <tr><td>姓名</td><td><input type="text" name="PersonName" id="PersonName" class="easyui-validatebox" /></td></tr>
+                <tr><td>年龄</td><td><input type="text" name="age" id="yyyage" class="easyui-validatebox" onkeyup='this.value=this.value.replace(/\D/gi,"")' /></td></tr>
+                <tr>
+                    <td>性别</td>
+                    <td>
+                        <select class="easyui-combobox" name="Gender" id="sexyyy">
+                            <option value="0">男</option>
+                            <option value="1">女</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr><td>住址</td><td><input type="text" name="Addess" id="Addess" class="easyui-validatebox" /></td></tr>
+                <tr><td>联系电话</td><td><input type="text" name="Photo" id="Photo" class="easyui-validatebox" /></td></tr>
+                <tr><td>入厂时间</td><td><input type="text" name="RuzTime" id="RuzTime" class="easyui-datebox" /></td></tr>
+            </table>
+        }
     </div>
 
 
@@ -1540,6 +1699,6 @@
             <a href="#" class="easyui-linkbutton" id="ss2" onclick="ss()" iconCls="icon-add" plain="true">添加2</a>
         </div>
     </div>-->
-    
+
 </body>
 </html>

@@ -415,6 +415,15 @@
           <Property Name="HaveLook_ID" Type="bigint" Nullable="false" />
           <Property Name="Str_image" Type="nvarchar" MaxLength="250" />
         </EntityType>
+        <EntityType Name="THaveLookBanner">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Imagestr" Type="nvarchar" MaxLength="250" />
+          <Property Name="Items" Type="int" />
+          <Property Name="del" Type="int" />
+        </EntityType>
         <EntityType Name="TLoginbak">
           <Key>
             <PropertyRef Name="ID" />
@@ -1164,6 +1173,7 @@
           <EntitySet Name="T_ZhuaiJiaBak" EntityType="Self.T_ZhuaiJiaBak" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="THavelook" EntityType="Self.THavelook" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="THaveLook_image" EntityType="Self.THaveLook_image" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="THaveLookBanner" EntityType="Self.THaveLookBanner" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TLoginbak" EntityType="Self.TLoginbak" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Ttext" EntityType="Self.Ttext" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TtextImage" EntityType="Self.TtextImage" Schema="dbo" store:Type="Tables" />
@@ -1607,6 +1617,7 @@
             <End Role="THavelook" EntitySet="THavelooks" />
             <End Role="THaveLook_image" EntitySet="THaveLook_image" />
           </AssociationSet>
+          <EntitySet Name="THaveLookBanners" EntityType="OAModel.THaveLookBanner" />
         </EntityContainer>
         <EntityType Name="UserInfo">
           <Key>
@@ -2758,6 +2769,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="THaveLookBanner">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Imagestr" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Items" Type="Int32" />
+          <Property Name="del" Type="Int32" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3315,6 +3335,16 @@
                 <ScalarProperty Name="Str_image" ColumnName="Str_image" />
                 <ScalarProperty Name="HaveLook_ID" ColumnName="HaveLook_ID" />
                 <ScalarProperty Name="del" ColumnName="del" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="THaveLookBanners">
+            <EntityTypeMapping TypeName="OAModel.THaveLookBanner">
+              <MappingFragment StoreEntitySet="THaveLookBanner">
+                <ScalarProperty Name="del" ColumnName="del" />
+                <ScalarProperty Name="Items" ColumnName="Items" />
+                <ScalarProperty Name="Imagestr" ColumnName="Imagestr" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

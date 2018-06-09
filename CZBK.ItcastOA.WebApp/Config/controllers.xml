@@ -171,6 +171,7 @@
     <property name="WxUserService" ref="WxUserService" />
     <property name="THaveLook_imageService" ref="THaveLook_imageService" />
     <property name="THavelookService" ref="THavelookService" />
+    <property name="THaveLookBannerService" ref="THaveLookBannerService" />
 
   </object>
   <!--intentionally do NOT register the AccountController or the ValuesController with the container; demonstrates that the underlying

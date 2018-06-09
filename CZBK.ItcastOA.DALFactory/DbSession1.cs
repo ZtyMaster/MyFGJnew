@@ -450,6 +450,21 @@ namespace CZBK.ItcastOA.DALFactory
             set { _THaveLook_imageDal = value; }
         }
 	
+		private ITHaveLookBannerDal _THaveLookBannerDal;
+        public ITHaveLookBannerDal THaveLookBannerDal
+        {
+            get
+            {
+                if(_THaveLookBannerDal == null)
+                {
+                   // _THaveLookBannerDal = new THaveLookBannerDal();
+				    _THaveLookBannerDal =AbstractFactory.CreateTHaveLookBannerDal();
+                }
+                return _THaveLookBannerDal;
+            }
+            set { _THaveLookBannerDal = value; }
+        }
+	
 		private ITLoginbakDal _TLoginbakDal;
         public ITLoginbakDal TLoginbakDal
         {

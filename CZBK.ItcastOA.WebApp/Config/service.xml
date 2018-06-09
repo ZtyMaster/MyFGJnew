@@ -67,4 +67,6 @@
   </object>
   <object type="CZBK.ItcastOA.BLL.THavelookService, CZBK.ItcastOA.BLL" singleton="false" name="THavelookService" >
   </object>
+  <object type="CZBK.ItcastOA.BLL.THaveLookBannerService, CZBK.ItcastOA.BLL" singleton="false" name="THaveLookBannerService" >
+  </object>
 </objects>

@@ -243,6 +243,14 @@ namespace CZBK.ItcastOA.BLL
         }
     }   
 	
+	public partial class THaveLookBannerService :BaseService<THaveLookBanner>,ITHaveLookBannerService
+    {
+        public override void SetCurretnDal()
+        {
+            CurrentDal = this.GetCurrentDbSession.THaveLookBannerDal;
+        }
+    }   
+	
 	public partial class TLoginbakService :BaseService<TLoginbak>,ITLoginbakService
     {
         public override void SetCurretnDal()

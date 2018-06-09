@@ -155,6 +155,11 @@ namespace CZBK.ItcastOA.IBLL
        
     }   
 	
+	public partial interface ITHaveLookBannerService : IBaseService<THaveLookBanner>
+    {
+       
+    }   
+	
 	public partial interface ITLoginbakService : IBaseService<TLoginbak>
     {
        

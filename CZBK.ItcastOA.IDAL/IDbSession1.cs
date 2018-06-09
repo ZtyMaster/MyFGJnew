@@ -70,6 +70,8 @@ namespace CZBK.ItcastOA.IDAL
 	
 		ITHaveLook_imageDal THaveLook_imageDal{get;set;}
 	
+		ITHaveLookBannerDal THaveLookBannerDal{get;set;}
+	
 		ITLoginbakDal TLoginbakDal{get;set;}
 	
 		ITtextDal TtextDal{get;set;}

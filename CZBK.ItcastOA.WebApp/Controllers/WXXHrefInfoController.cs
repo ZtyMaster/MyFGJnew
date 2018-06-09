@@ -37,6 +37,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
         IBLL.IWxUserService WxUserService { get; set; }
         IBLL.ITHaveLook_imageService THaveLook_imageService { get; set; }
         IBLL.ITHavelookService THavelookService { get; set; }
+        IBLL.ITHaveLookBannerService THaveLookBannerService { get; set; }
 
         public ActionResult Index()
         {
@@ -638,7 +639,7 @@ namespace CZBK.ItcastOA.WebApp.Controllers
 
                 string filename = Path.GetFileName(file.FileName);//获取上传的文件名
                 string fileExt = Path.GetExtension(filename);//获取扩展名  
-                string dir = "/HaveLookSaveImage/" + MvcApplication.GetT_time().ToString("yyyy-MM-dd") + "/";
+                string dir = "/HaveLookSaveImage/SaveImage/" + MvcApplication.GetT_time().ToString("yyyy-MM-dd") + "/";
                 Directory.CreateDirectory(Path.GetDirectoryName(Request.MapPath(dir)));
                 string filenewName = Guid.NewGuid().ToString();
                 string fulldir = dir + filenewName + fileExt;
@@ -670,6 +671,84 @@ namespace CZBK.ItcastOA.WebApp.Controllers
             var temp= THavelookService.LoadSearchEntities(new UserInfoParam() { PageIndex = pageIdex, PageSize = pageSize, CityID = city, C_id = itemid, Str = val, TotalCount = totalcount });
             
             return Json(new { rows = temp, total = totalcount }, JsonRequestBehavior.AllowGet);
+        }
+        //后台看看banner操作
+        public ActionResult LoadHaveLookBanner() {
+            int pageIndex = Request["page"] != null ? int.Parse(Request["page"]) : 1;
+            int pageSize = Request["rows"] != null ? int.Parse(Request["rows"]) : 35;
+
+            string Str = Request["Str"];
+            var totalCount = int.MaxValue;
+            var temp = THaveLookBannerService.LoadPageEntities(pageIndex, pageSize, out totalCount, z => z.del == 0, s => s.Items, false);
+            var ret = from a in temp
+                      select new {
+                          a.ID,
+                          a.del,
+                          a.Imagestr,
+                          a.Items
+                      };
+            return Json(new { rows = ret, total = totalCount }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult AddHaveLookBanner(THaveLookBanner tlb)
+        {
+            if (tlb.ID > 0)
+            {
+                var ThisTT = THaveLookBannerService.LoadEntities(x => x.ID == tlb.ID).FirstOrDefault();
+                ThisTT.del = tlb.del;
+                ThisTT.Imagestr = tlb.Imagestr;
+                ThisTT.Items = tlb.Items;
+                if (THaveLookBannerService.EditEntity(ThisTT))
+                {
+                    return Json(new { ret = "ok" }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { ret = "修改数据出现错误！" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                
+                try
+                {
+                    var temp = THaveLookBannerService.AddEntity(tlb);
+                    return Json(new { ret = "ok", id = temp.ID }, JsonRequestBehavior.AllowGet);
+                }
+                catch
+                {
+                    return Json(new { ret = "新增数据出现错误！" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+        }
+        //上传后台图片
+
+        public ActionResult AddHavelookBannerFlie()
+        {
+
+
+            HttpPostedFileBase file = Request.Files["fileIconUp"];
+            if (file != null)
+            {
+                string filename = Path.GetFileName(file.FileName);//获取上传的文件名
+                string fileExt = Path.GetExtension(filename);//获取扩展名
+                if (fileExt == ".jpg" || fileExt == ".png")
+                {
+                    string dir = "/HaveLookSaveImage/BannerImage/" + MvcApplication.GetT_time().ToString("yyyy-MM-dd") + "/";
+                    Directory.CreateDirectory(Path.GetDirectoryName(Request.MapPath(dir)));
+                    string filenewName = Guid.NewGuid().ToString();
+                    string fulldir = dir + filenewName + fileExt;
+                    file.SaveAs(Request.MapPath(fulldir));
+                    return Content("yes:" + fulldir);
+                }
+                else
+                {
+                    return Content("no:文件类型错误，文件扩展名错误！");
+                }
+            }
+            else
+            {
+                return Content("no:请上传图片文件");
+            }            
         }
         #endregion
     }
